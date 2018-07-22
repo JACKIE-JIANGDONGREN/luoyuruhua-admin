@@ -6,6 +6,8 @@ import router from './router';
 import Vuex from 'vuex';
 import axios from 'axios';
 
+import store from './vuex/store';
+
 // 引入后台框架 element UI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -23,7 +25,19 @@ Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
   window.document.title = to.meta.title;
-  next();
+  if (store.state.isLogin == 100) { //如果有就直接到首页咯
+    if (to.path == '/index') {
+      next();
+    } else {
+      next({path: '/index', replace: true});
+    }
+  } else {
+    if (to.path == '/') {
+      next();
+    } else {
+      next({path: '/', replace: true});
+    }
+  }
 });
 
 router.afterEach((to, from, next) => {
@@ -34,6 +48,7 @@ router.afterEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
+  store,
   components: {App},
   template: '<App/>'
 })

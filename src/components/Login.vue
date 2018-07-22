@@ -28,22 +28,38 @@
     data() {
       return {
         loginForm: {
-          username: 'admin',
-          password: 'admin'
+          username: '',
+          password: ''
         },
         loading: false,
         pwdType: 'password'
       }
     },
     methods: {
-      showPwd() {
-        if (this.pwdType === 'password') {
-          this.pwdType = ''
-        } else {
-          this.pwdType = 'password'
-        }
-      },
       handleLogin() {
+        let that = this;
+        console.log(that.loginForm.username)
+        this.$http({
+          method: 'post',
+          url: 'http://192.168.0.115:3000/login',
+          data: {
+            name: that.loginForm.username,
+            password: that.loginForm.password
+          },
+          dataType: 'json'
+        }).then(function (res) {
+          if (res.data.msg == '-1') {
+            alert('用户名错误');
+          } else if (res.data.msg == '0') {
+            alert('密码不正确');
+          } else if (res.data.msg == '1') {
+            that.$store.commit('changeLogin', '100')
+            that.$router.push('index');
+          }
+        }).catch(function (err) {
+          console.log(err)
+          console.log('0')
+        });
       }
     }
   }
