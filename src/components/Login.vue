@@ -38,27 +38,29 @@
     methods: {
       handleLogin() {
         let that = this;
-        console.log(that.loginForm.username)
+        if (that.loginForm.username == '' || that.loginForm.password == '') {
+          this.$message({message: '用户名或密码为空', type: 'warning'});
+        }
         this.$http({
           method: 'post',
-          url: 'http://192.168.0.115:3000/login',
+          url: 'http://192.168.0.20:3000/login',
           data: {
             name: that.loginForm.username,
             password: that.loginForm.password
           },
           dataType: 'json'
         }).then(function (res) {
-          if (res.data.msg == '-1') {
-            alert('用户名错误');
-          } else if (res.data.msg == '0') {
-            alert('密码不正确');
+          if (res.data.msg == '2') {
+            that.$message({message: '用户不存在！', type: 'error'});
+          } else if (res.data.msg == '3') {
+            that.$message({message: '密码不正确！', type: 'error'});
           } else if (res.data.msg == '1') {
-            that.$store.commit('changeLogin', '100')
+            that.$message({message: '登录成功', type: 'success'});
+            that.$store.commit('changeLogin', '100');
             that.$router.push('index');
           }
         }).catch(function (err) {
           console.log(err)
-          console.log('0')
         });
       }
     }
