@@ -22,6 +22,7 @@
 </template>
 
 <script>
+  // import cookie from '../../util/cookieConfg';
 
   export default {
     name: 'login',
@@ -43,7 +44,7 @@
         }
         this.$http({
           method: 'post',
-          url: 'http://192.168.0.20:3000/login',
+          url: 'http://192.168.0.115:3000/login',
           data: {
             name: that.loginForm.username,
             password: that.loginForm.password
@@ -55,8 +56,8 @@
           } else if (res.data.msg == '3') {
             that.$message({message: '密码不正确！', type: 'error'});
           } else if (res.data.msg == '1') {
+            that.cookie.setCookie('userInfo', '1', 15);
             that.$message({message: '登录成功', type: 'success'});
-            that.$store.commit('changeLogin', '100');
             that.$router.push('index');
           }
         }).catch(function (err) {

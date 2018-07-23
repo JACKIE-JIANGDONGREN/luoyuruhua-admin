@@ -7,6 +7,8 @@ import Vuex from 'vuex';
 import axios from 'axios';
 
 import store from './vuex/store';
+import Cookie from '../util/cookieConfg';
+
 
 // 引入后台框架 element UI
 import ElementUI from 'element-ui';
@@ -20,17 +22,14 @@ Vue.use(ElementUI);
 
 
 Vue.prototype.$http = axios;
+Vue.prototype.cookie = Cookie;
 
 Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
   window.document.title = to.meta.title;
-  if (store.state.isLogin == 100) { //如果有就直接到首页咯
-    if (to.path == '/index') {
-      next();
-    } else {
-      next({path: '/index', replace: true});
-    }
+  if (Cookie.getCookie('userInfo') == '1') { //如果有就直接到首页咯
+    next();
   } else {
     if (to.path == '/') {
       next();

@@ -4,15 +4,9 @@ import axios from 'axios';
 
 Vue.use(Vuex);
 
-let state = {
-  isLogin: 0
-};
+let state = {};
 
-let mutations = {
-  changeLogin(state, data) {
-    state.isLogin = data;
-  }
-};
+let mutations = {};
 
 let getters = {};
 
