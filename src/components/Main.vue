@@ -1,8 +1,8 @@
 <template>
   <div class="main_wrap">
     <left-slide></left-slide>
-    <div class="main_right">
-      <router-view/>
+    <div class="main_right" style="margin-left: 200px;background: #ff0;height: 100%;">
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -25,6 +25,7 @@
 <style scoped>
   .main_wrap {
     position: relative;
+    width: 100%;
     height: 100%;
   }
 

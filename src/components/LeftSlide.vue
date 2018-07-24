@@ -2,35 +2,19 @@
   <div class="main_left">
     <div class="main_left_logo">
     </div>
-    <el-menu router :default-active="$route.path" unique-opened background-color="#545c64"
+    <!--<el-menu router :default-active="123" unique-opened background-color="#545c64"
              text-color="#fff" active-text-color="#ffd04b">
-      　　　　
-      <template v-for="(item , index) in $router.options.routes" v-if="item.menuShow">
-        <template v-if="item.hasChild && item.path=='/index'">
-          <!--<div>{{item.children}}</div>-->
-          <template v-for="(itemChild , index1) in item.children">
-            <el-submenu :index="itemChild.path" :key="index1">
-              <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>{{itemChild.menuName}}</span>
-              </template>
-              　　
-              <el-menu-item v-for="(itemChilds , indexs) in itemChild.children" :index="'index/'+itemChilds.path" :key="indexs">
-                　　{{itemChilds.menuName}}
-                　　
-              </el-menu-item>
-            </el-submenu>
-          </template>
-        </template>
-        　　　　　　　
-        <!--<el-menu-item :index="item.path" v-else>
-          {{item.menuName}}
-          　　
-        </el-menu-item>-->
-        　　　　
-      </template>
-      　　
-    </el-menu>
+      <el-submenu :index="123" :key="456">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>123456</span>
+        </template>　
+        <el-menu-item :index="123" :key="465">
+          　　123
+        </el-menu-item>
+      </el-submenu>
+    </el-menu>-->
+    <router-link :to="{name:'About',params:{id:'123'}}" tag="p">linkto</router-link>
   </div>
 </template>
 
@@ -60,6 +44,9 @@
   .main_left {
     width: 200px;
     height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 
   .main_left .el-menu {

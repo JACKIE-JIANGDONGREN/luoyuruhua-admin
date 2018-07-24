@@ -4,7 +4,15 @@
 
 <script>
   export default {
-    name: "About"
+    name: "About",
+    data() {
+      return {
+        msg: '123'
+      }
+    },
+    mounted() {
+      console.log(this.$route)
+    }
   }
 </script>
 
