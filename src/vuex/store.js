@@ -1,12 +1,35 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
+import Cookie from '../../util/cookieConfg';
 
 Vue.use(Vuex);
 
-let state = {};
+let state = {
+  userName: '',
+  userPassword: ''
+};
 
-let mutations = {};
+let mutations = {
+  isLogin(state) {
+    if (Cookie.getCookie('user')) {
+      axios({
+        method: 'post',
+        url: 'http://192.168.0.20:3000/isLogin',
+        data: {
+          user: Cookie.getCookie('user')
+        }
+      }).then(function (res) {
+        if (res.data.status == 'OK' || res.data.status == 'ok') {
+          state.userPassword = res.data.password;
+          state.userName = res.data.name;
+        }
+      }).catch(function (err) {
+        console.log(err)
+      });
+    }
+  }
+};
 
 let getters = {};
 

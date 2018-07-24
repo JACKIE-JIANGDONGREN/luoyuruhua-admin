@@ -1,14 +1,14 @@
 <template>
   <div class="login-container">
-    <el-form autoComplete="on" :model="loginForm" ref="loginForm" label-position="left"
+    <el-form autoComplete="on" label-position="left"
              label-width="0px"
              class="card-box login-form">
       <h3 class="title">用户登录</h3>
       <el-form-item prop="username">
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username"/>
+        <el-input name="username" type="text" v-model="$store.state.userName" autoComplete="on" placeholder="username"/>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password"
+        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="$store.state.userPassword"
                   autoComplete="on"
                   placeholder="password"></el-input>
       </el-form-item>
@@ -22,16 +22,10 @@
 </template>
 
 <script>
-  // import cookie from '../../util/cookieConfg';
-
   export default {
     name: 'login',
     data() {
       return {
-        loginForm: {
-          username: '',
-          password: ''
-        },
         loading: false,
         pwdType: 'password'
       }
@@ -39,15 +33,15 @@
     methods: {
       handleLogin() {
         let that = this;
-        if (that.loginForm.username == '' || that.loginForm.password == '') {
+        if (this.$store.state.userName == '' || this.$store.state.userPassword == '') {
           this.$message({message: '用户名或密码为空', type: 'warning'});
         }
         this.$http({
           method: 'post',
-          url: 'http://192.168.0.115:3000/login',
+          url: 'http://192.168.0.20:3000/login',
           data: {
-            name: that.loginForm.username,
-            password: that.loginForm.password
+            name: that.$store.state.userName,
+            password: that.$store.state.userPassword
           },
           dataType: 'json'
         }).then(function (res) {
@@ -56,14 +50,18 @@
           } else if (res.data.msg == '3') {
             that.$message({message: '密码不正确！', type: 'error'});
           } else if (res.data.msg == '1') {
-            that.cookie.setCookie('userInfo', '1', 15);
-            that.$message({message: '登录成功', type: 'success'});
+            that.cookie.setCookie('user', res.data.user, 15);
             that.$router.push('index');
+            that.$message({message: '登录成功', type: 'success'});
           }
         }).catch(function (err) {
+          that.$message({message: '登录异常，请联系管理员！', type: 'error'});
           console.log(err)
         });
       }
+    },
+    mounted() {
+      this.$store.commit('isLogin'); // 判断用户是否登录
     }
   }
 </script>

@@ -28,7 +28,7 @@ Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
   window.document.title = to.meta.title;
-  if (Cookie.getCookie('userInfo') == '1') { //如果有就直接到首页咯
+  if (Cookie.getCookie('user')) { //如果有就直接到首页咯
     next();
   } else {
     if (to.path == '/') {
