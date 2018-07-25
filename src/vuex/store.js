@@ -20,11 +20,14 @@ let mutations = {
           user: Cookie.getCookie('user')
         }
       }).then(function (res) {
-        if (res.data.status == 'OK' || res.data.status == 'ok') {
+        if (res.data.msg == '1') {
           state.userPassword = res.data.password;
           state.userName = res.data.name;
+        } else {
+          Cookie.setCookie('user', '0');
         }
       }).catch(function (err) {
+        Cookie.setCookie('user', '0');
         console.log(err)
       });
     }

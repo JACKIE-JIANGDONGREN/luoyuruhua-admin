@@ -11,7 +11,7 @@ export default new Router({
       component: resove => require(['../components/Login'], resove),//路由懒加载
       meta: {
         title: '落雨如画后台管理平台-登录',
-        auth: true
+        auth: false
       }
     },
     {

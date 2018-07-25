@@ -5,6 +5,7 @@ import App from './App';
 import router from './router';
 import Vuex from 'vuex';
 import axios from 'axios';
+import GeminiScrollbar from 'vue-gemini-scrollbar';
 
 import store from './vuex/store';
 import Cookie from '../util/cookieConfg';
@@ -19,6 +20,7 @@ import 'public_css/clear.css';
 
 Vue.use(Vuex);
 Vue.use(ElementUI);
+Vue.use(GeminiScrollbar);
 
 
 Vue.prototype.$http = axios;
@@ -28,8 +30,25 @@ Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
   window.document.title = to.meta.title;
-  if (Cookie.getCookie('user')) { //如果有就直接到首页咯
-    next();
+  if (Cookie.getCookie('user') && to.meta.auth) { //如果有就直接到首页咯
+    axios({
+      method: 'post',
+      url: 'http://192.168.0.115:3000/isLogin',
+      data: {
+        user: Cookie.getCookie('user')
+      }
+    }).then(function (res) {
+      if (res.data.msg == '1') {
+        next();
+      } else {
+        next({path: '/', replace: true});
+        Cookie.setCookie('user', '0');
+      }
+    }).catch(function (err) {
+      next({path: '/', replace: true});
+      Cookie.setCookie('user', '0');
+      console.log(err)
+    });
   } else {
     if (to.path == '/') {
       next();
