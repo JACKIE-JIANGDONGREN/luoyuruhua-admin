@@ -7,7 +7,8 @@ Vue.use(Vuex);
 
 let state = {
   userName: '',
-  userPassword: ''
+  userPassword: '',
+  spreadInfo: false
 };
 
 let mutations = {

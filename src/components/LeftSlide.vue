@@ -1,14 +1,15 @@
 <template>
   <div class="main_left">
-    <div class="main_left_logo">
-      <span style="color: #fff;">{{$route.path}}</span>
+    <div class="main_left_logo" style="text-align: center;">
+      <!--<span style="color: #fff;line-height: 70px;">{{$route.path}}</span>-->
     </div>
-    <el-menu router :default-active="$route.path" unique-opened background-color="#545c64"
+    <el-menu router :default-active="$route.path" unique-opened background-color="#545c64" class="el-menu-vertical-demo"
+             :collapse="$store.state.spreadInfo"
              text-color="#fff" active-text-color="#ffd04b">
       <template v-for="(item,index) in slideData">
         <el-submenu :index="item.path" :key="index" v-if="item.hasChild">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i :class="item.icon"></i>
             <span>{{item.menuName}}</span>
           </template>
           <el-menu-item v-for="(childItem,childIndex) in item.children" :index="childItem.path" :key="childIndex">
@@ -16,7 +17,7 @@
           </el-menu-item>
         </el-submenu>
         <el-menu-item v-else :index="item.path" :key="index">
-          <i class="el-icon-location"></i>
+          <i :class="item.icon"></i>
           <span>{{item.menuName}}</span>
         </el-menu-item>
       </template>
@@ -29,12 +30,13 @@
     name: "LeftSlide",
     data() {
       return {
-        isCollapse: false,
+        isCollapse: this.$store.state.spreadInfo,
         slideData: [
           {
             menuName: '管理员管理',
             path: '/admin',
             hasChild: true,
+            icon: 'el-icon-star-off',
             children: [
               {
                 menuName: '管理员列表',
@@ -48,6 +50,7 @@
           },
           {
             menuName: '用户管理',
+            icon: 'el-icon-edit',
             path: '/user',
             hasChild: true,
             children: [
@@ -65,6 +68,7 @@
             menuName: '随笔管理',
             path: '/notes',
             hasChild: true,
+            icon: 'el-icon-view',
             children: [
               {
                 menuName: '随笔列表',
@@ -79,7 +83,8 @@
           {
             menuName: '关于平台',
             path: '/index/about',
-            hasChild: false
+            hasChild: false,
+            icon: 'el-icon-location-outline'
           }
         ]
       }
@@ -93,14 +98,18 @@
       }
     },
     mounted() {
-      console.log(this.$router)
+      // console.log(this.$router)
     }
   }
 </script>
 
 <style scoped>
-  .main_left {
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
+    min-height: 400px;
+  }
+
+  .main_left {
     height: 100%;
     position: absolute;
     left: 0;
@@ -109,7 +118,7 @@
   }
 
   .main_left .el-menu {
-    width: 200px;
+    border-right: none !important;
   }
 
   .main_left_logo {

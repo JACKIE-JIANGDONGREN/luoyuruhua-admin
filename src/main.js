@@ -4,11 +4,11 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import Vuex from 'vuex';
-import axios from 'axios';
-import GeminiScrollbar from 'vue-gemini-scrollbar';
+import axios from 'axios'; // 引入请求axios
+import GeminiScrollbar from 'vue-gemini-scrollbar';  // 自定义滚动条
 
 import store from './vuex/store';
-import Cookie from '../util/cookieConfg';
+import Cookie from '../util/cookieConfg';  // 配置cookie
 
 
 // 引入后台框架 element UI
@@ -33,12 +33,13 @@ router.beforeEach((to, from, next) => {
   if (Cookie.getCookie('user') && to.meta.auth) { //如果有就直接到首页咯
     axios({
       method: 'post',
-      url: 'http://192.168.0.115:3000/isLogin',
+      url: 'http://192.168.0.20:3000/isLogin',
       data: {
         user: Cookie.getCookie('user')
       }
     }).then(function (res) {
       if (res.data.msg == '1') {
+        store.state.userName = res.data.name;
         next();
       } else {
         next({path: '/', replace: true});
