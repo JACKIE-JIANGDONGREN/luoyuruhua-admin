@@ -1,13 +1,142 @@
 <template>
-    <div>添加管理员</div>
+  <GeminiScrollbar class="add_admin_wrap">
+    <div class="add_admin_con">
+      <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="管理员名称" prop="name">
+          <el-input type="text" v-model="ruleForm2.name" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input type="text" v-model="ruleForm2.phone" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="pass">
+          <el-input type="password" v-model="ruleForm2.pass" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="pass">
+          <el-input type="text" v-model="ruleForm2.email" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-radio-group v-model="ruleForm2.sex">
+            <el-radio label="男"></el-radio>
+            <el-radio label="女"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="年龄" prop="age">
+          <el-input v-model.number="ruleForm2.age"></el-input>
+        </el-form-item>
+        <el-form-item label="个性签名" prop="pass">
+          <el-input type="textarea" v-model="ruleForm2.signature" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+          <el-button @click="resetForm('ruleForm2')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </GeminiScrollbar>
 </template>
-
 <script>
-    export default {
-        name: "AddAdmin"
+  export default {
+    name: "AddAdmin",
+    data() {
+      var validateUserName = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入管理员名称'));
+        } else {
+          callback();
+        }
+      };
+      var validateUserPhone = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入手机号'));
+        } else if (!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.ruleForm2.phone))) {
+          callback(new Error('不是完整的11位手机号或者正确的手机号前七位'));
+        } else {
+          callback();
+        }
+      };
+      var checkAge = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('年龄不能为空'));
+        }
+        setTimeout(() => {
+          if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          } else {
+            if (value < 18) {
+              callback(new Error('必须年满18岁'));
+            } else {
+              callback();
+            }
+          }
+        }, 1000);
+      };
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z_][A-Za-z_0-9]{6,18}$/.test(this.ruleForm2.pass)) {
+            callback(new Error('密码为6-18位，包含字母、数字或下划线，不能以数字开头'));
+          } else {
+            callback();
+          }
+        }
+      };
+      return {
+        ruleForm2: {
+          name: '',
+          phone: '',
+          pass: '',
+          email: '',
+          age: '',
+          sex: '',
+          signature: ''
+        },
+        rules2: {
+          name: [
+            {validator: validateUserName, trigger: 'blur', required: true}
+          ],
+          phone: [
+            {validator: validateUserPhone, trigger: 'blur', required: true}
+          ],
+          pass: [
+            {validator: validatePass, trigger: 'blur', required: true}
+          ],
+          age: [
+            {validator: checkAge, trigger: 'blur'}
+          ],
+          sex: [
+            {required: true, message: '请选择您的性别', trigger: 'change'}
+          ]
+        }
+      };
+    },
+    methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
     }
+  }
 </script>
-
 <style scoped>
+  .add_admin_con {
+    width: 780px;
+  }
+
+  .demo-ruleForm {
+    width: 460px;
+    margin: 35px 20px 0;
+    height: 100%;
+    overflow: auto;
+  }
 
 </style>

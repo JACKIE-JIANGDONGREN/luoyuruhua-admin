@@ -1,33 +1,15 @@
 <template>
   <div class="index_wrap">
     <div class="welcome">
-      <span>ÄãºÃ£¬</span>
+      <span>æ¬¢è¿ï¼Œ</span>
       <span class="user_name">{{$store.state.userName}}</span>
-      <span>£¬»¶Ó­½øÈëºóÌ¨¹ÜÀíÖĞĞÄ</span>
+      <span>åå°ç®¡ç†</span>
     </div>
     <ul class="ip_wrap">
-      <li>µÇÂ¼IP£º<span>{{ip}}</span></li>
-      <li>µÇÂ¼Ê±¼ä£º<span>{{ (new Date(loginTime).getFullYear())+'/'+(new Date(loginTime).getMonth()+1)+'/'+(new Date(loginTime).getDate())+' '+(new Date(loginTime).getHours())+':'+(new Date(loginTime).getMinutes())+':'+(new Date(loginTime).getSeconds())}}</span>
+      <li>ç™»å½•IPï¼š<span>{{ip}}</span></li>
+      <li>ç™»å½•æ—¶é—´ï¼š<span>{{ (new Date(loginTime).getFullYear())+'/'+(new Date(loginTime).getMonth()+1)+'/'+(new Date(loginTime).getDate())+' '+(new Date(loginTime).getHours())+':'+(new Date(loginTime).getMinutes())+':'+(new Date(loginTime).getSeconds())}}</span>
       </li>
     </ul>
-    <el-table
-      :data="tableData"
-      style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="ÈÕÆÚ"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="ĞÕÃû"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="µØÖ·">
-      </el-table-column>
-    </el-table>
   </div>
 </template>
 
@@ -37,26 +19,13 @@
     data() {
       return {
         ip: '',
-        loginTime: '',
-        tableData: [{
-          date: '2016-05-03',
-          name: 'ÍõĞ¡»¢',
-          address: 'ÉÏº£ÊĞÆÕÍÓÇø½ğÉ³½­Â· 1518 Åª'
-        }, {
-          date: '2016-05-02',
-          name: 'ÍõĞ¡»¢',
-          address: 'ÉÏº£ÊĞÆÕÍÓÇø½ğÉ³½­Â· 1518 Åª'
-        }, {
-          date: '2016-05-04',
-          name: 'ÍõĞ¡»¢',
-          address: 'ÉÏº£ÊĞÆÕÍÓÇø½ğÉ³½­Â· 1518 Åª'
-        }]
+        loginTime: ''
       }
     },
     created() {
       let that = this;
       console.log(that.$store.state.userName)
-      this.$http.get('http://192.168.0.20:3000/getClientMsg', {
+      this.$http.get('http://192.168.0.115:3000/getClientMsg', {
         params: {
           name: that.$store.state.userName
         }

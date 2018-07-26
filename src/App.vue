@@ -20,7 +20,6 @@
     width: 100%;
     height: 100%;
     position: relative;
-    background: rgb(84, 92, 100);
     min-width: 980px;
   }
 </style>
