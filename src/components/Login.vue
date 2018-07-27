@@ -22,6 +22,8 @@
 </template>
 
 <script>
+  import Config from '../../util/config';
+
   export default {
     name: 'login',
     data() {
@@ -38,7 +40,7 @@
         }
         this.$http({
           method: 'post',
-          url: 'http://192.168.0.20:3000/login',
+          url: Config.host + ':' + Config.port + '/login',
           data: {
             name: that.$store.state.userName,
             password: that.$store.state.userPassword

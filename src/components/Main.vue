@@ -33,6 +33,7 @@
     position: relative;
     width: 100%;
     height: 100%;
+    background: rgb(84, 92, 100);
   }
 
   .el-menu-vertical-demo:not(.el-menu--collapse) {

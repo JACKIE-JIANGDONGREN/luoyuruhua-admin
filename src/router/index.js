@@ -30,7 +30,13 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-首页',
             auth: true
-          }
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            }
+          ]
         },
         {
           path: 'admin',
@@ -39,7 +45,21 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-管理员列表',
             auth: true
-          }
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            },
+            {
+              title: '管理员管理',
+              path: ''
+            },
+            {
+              title: '管理员列表',
+              path: '/index/admin'
+            }
+          ]
         },
         {
           path: 'addAdmain',
@@ -48,7 +68,21 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-添加管理员',
             auth: true
-          }
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            },
+            {
+              title: '管理员管理',
+              path: ''
+            },
+            {
+              title: '添加管理员',
+              path: '/index/addAdmain'
+            }
+          ]
         },
         {
           path: 'userAdmin',
@@ -57,7 +91,21 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-用户列表',
             auth: true
-          }
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            },
+            {
+              title: '用户管理',
+              path: ''
+            },
+            {
+              title: '用户列表',
+              path: '/index/userAdmin'
+            }
+          ]
         },
         {
           path: 'addUser',
@@ -66,7 +114,21 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-添加用户',
             auth: true
-          }
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            },
+            {
+              title: '用户管理',
+              path: ''
+            },
+            {
+              title: '添加用户',
+              path: '/index/addUser'
+            }
+          ]
         },
         {
           path: 'notesMain',
@@ -75,7 +137,21 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-随笔列表',
             auth: true
-          }
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            },
+            {
+              title: '随笔管理',
+              path: ''
+            },
+            {
+              title: '随笔列表',
+              path: '/index/notesMain'
+            }
+          ]
         },
         {
           path: 'addNotes',
@@ -84,7 +160,21 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-添加随笔',
             auth: true
-          }
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            },
+            {
+              title: '随笔管理',
+              path: ''
+            },
+            {
+              title: '添加随笔',
+              path: '/index/addNotes'
+            }
+          ]
         },
         {
           path: 'about',
@@ -93,7 +183,17 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-关于平台',
             auth: true
-          }
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            },
+            {
+              title: '关于平台',
+              path: ''
+            }
+          ]
         }
       ]
     }

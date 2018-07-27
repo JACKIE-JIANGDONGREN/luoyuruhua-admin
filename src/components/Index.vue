@@ -24,8 +24,7 @@
     },
     created() {
       let that = this;
-      console.log(that.$store.state.userName)
-      this.$http.get('http://192.168.0.115:3000/getClientMsg', {
+      this.$http.get('http://192.168.0.20:3000/getClientMsg', {
         params: {
           name: that.$store.state.userName
         }

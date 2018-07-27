@@ -1,5 +1,6 @@
 <template>
   <GeminiScrollbar class="add_admin_wrap">
+    <bread-crumb></bread-crumb>
     <div class="add_admin_con">
       <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
         <el-form-item label="管理员名称" prop="name">
@@ -8,26 +9,27 @@
         <el-form-item label="手机号" prop="phone">
           <el-input type="text" v-model="ruleForm2.phone" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
-          <el-input type="password" v-model="ruleForm2.pass" auto-complete="off"></el-input>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="ruleForm2.password" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" prop="pass">
+        <el-form-item label="邮箱">
           <el-input type="text" v-model="ruleForm2.email" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-radio-group v-model="ruleForm2.sex">
-            <el-radio label="男"></el-radio>
-            <el-radio label="女"></el-radio>
+            <el-radio label="1">男</el-radio>
+            <el-radio label="0">女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="年龄" prop="age">
           <el-input v-model.number="ruleForm2.age"></el-input>
         </el-form-item>
-        <el-form-item label="个性签名" prop="pass">
+        <el-form-item label="个性签名">
           <el-input type="textarea" v-model="ruleForm2.signature" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm2')" :loading="btnStatus.info">{{btnStatus.text}}
+          </el-button>
           <el-button @click="resetForm('ruleForm2')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -35,6 +37,9 @@
   </GeminiScrollbar>
 </template>
 <script>
+  import BreadCrumb from './public/BreadCrumb';
+  import Config from '../../util/config';
+
   export default {
     name: "AddAdmin",
     data() {
@@ -48,8 +53,8 @@
       var validateUserPhone = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入手机号'));
-        } else if (!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.ruleForm2.phone))) {
-          callback(new Error('不是完整的11位手机号或者正确的手机号前七位'));
+        } else if (!(/^1(3|4|5|7|8)\d{9}$/.test(this.ruleForm2.phone))) {
+          callback(new Error('手机号有误，请重新输入'));
         } else {
           callback();
         }
@@ -74,7 +79,7 @@
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
-          if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z_][A-Za-z_0-9]{6,18}$/.test(this.ruleForm2.pass)) {
+          if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z_][A-Za-z_0-9]{6,18}$/.test(this.ruleForm2.password)) {
             callback(new Error('密码为6-18位，包含字母、数字或下划线，不能以数字开头'));
           } else {
             callback();
@@ -85,7 +90,7 @@
         ruleForm2: {
           name: '',
           phone: '',
-          pass: '',
+          password: '',
           email: '',
           age: '',
           sex: '',
@@ -98,7 +103,7 @@
           phone: [
             {validator: validateUserPhone, trigger: 'blur', required: true}
           ],
-          pass: [
+          password: [
             {validator: validatePass, trigger: 'blur', required: true}
           ],
           age: [
@@ -107,16 +112,51 @@
           sex: [
             {required: true, message: '请选择您的性别', trigger: 'change'}
           ]
+        },
+        btnStatus: {
+          info: false,
+          text: '提交'
         }
-      };
+      }
     },
     methods: {
       submitForm(formName) {
+        let that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            that.btnStatus = {info: true, text: '提交中'};
+            this.$http({
+              method: 'post',
+              url: Config.host + ':' + Config.port + '/addAdmin',
+              data: that.ruleForm2
+            }).then(function (res) {
+              if (res.data.msg == '1') {
+                that.btnStatus = {info: false, text: '提交'};
+                that.$notify({
+                  title: '成功',
+                  message: res.data.des,
+                  type: 'success'
+                });
+                setTimeout(function () {
+                  that.$router.push({name: 'AdminMain'});
+                }, 1000);
+              } else {
+                that.btnStatus = {info: false, text: '提交'};
+                that.$notify({
+                  title: '警告',
+                  message: res.data.des,
+                  type: 'error'
+                });
+              }
+            }).catch(function (err) {
+              console.log(err)
+            });
           } else {
-            console.log('error submit!!');
+            that.$notify({
+              title: '警告',
+              message: '请输入要添加的管理员信息',
+              type: 'error'
+            });
             return false;
           }
         });
@@ -124,6 +164,11 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
       }
+    },
+    components: {
+      BreadCrumb
+    },
+    mounted() {
     }
   }
 </script>
@@ -134,7 +179,7 @@
 
   .demo-ruleForm {
     width: 460px;
-    margin: 35px 20px 0;
+    margin: 40px 20px 20px;
     height: 100%;
     overflow: auto;
   }
