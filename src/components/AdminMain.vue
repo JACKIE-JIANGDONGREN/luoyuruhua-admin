@@ -4,34 +4,37 @@
     <div class="find_admin">
       <el-autocomplete
         popper-class="my-autocomplete"
-        v-model="state3"
+        v-model="userphone"
         :fetch-suggestions="querySearchAsync"
-        placeholder="ÇëÊäÈëÄÚÈİ">
+        @select="handleSelectPhone"
+        size="small"
+        placeholder="æ‰‹æœºå·">
         <i
           class="el-icon-edit el-input__icon"
           slot="suffix">
         </i>
         <template slot-scope="{ item }">
-          <span class="name">{{ item.name }}</span>
+          <span class="name">{{ item.phone }}</span>
         </template>
       </el-autocomplete>
+      <el-button type="primary" icon="el-icon-search" size="small" @click="getAdminInterface()">æœç´¢</el-button>
     </div>
     <div class="admin_list">
       <el-table :data="tableData" stripe style="width: 100%">
         <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="createTime" label="´´½¨Ê±¼ä" :show-overflow-tooltip="showText"></el-table-column>
-        <el-table-column prop="name" label="ĞÕÃû"></el-table-column>
-        <el-table-column prop="sex" label="ĞÔ±ğ"></el-table-column>
-        <el-table-column prop="age" label="ÄêÁä"></el-table-column>
-        <el-table-column prop="phone" label="ÊÖ»úºÅ"></el-table-column>
-        <el-table-column prop="email" label="ÓÊÏä" :show-overflow-tooltip="showText"></el-table-column>
-        <el-table-column prop="userImg" label="Í·Ïñ"></el-table-column>
-        <el-table-column prop="signature" label="Ç©Ãû" :show-overflow-tooltip="showText"></el-table-column>
-        <el-table-column fixed="right" label="²Ù×÷" width="150">
+        <el-table-column prop="createTime" label="åˆ›å»ºæ—¶é—´" :show-overflow-tooltip="showText"></el-table-column>
+        <el-table-column prop="name" label="ç®¡ç†å‘˜"></el-table-column>
+        <el-table-column prop="sex" label="æ€§åˆ«"></el-table-column>
+        <el-table-column prop="age" label="å¹´é¾„"></el-table-column>
+        <el-table-column prop="phone" label="æ‰‹æœºå·"></el-table-column>
+        <el-table-column prop="email" label="é‚®ç®±" :show-overflow-tooltip="showText"></el-table-column>
+        <el-table-column prop="userImg" label="å¤´åƒ"></el-table-column>
+        <el-table-column prop="signature" label="ç­¾å" :show-overflow-tooltip="showText"></el-table-column>
+        <el-table-column fixed="right" label="æ“ä½œ" width="150">
           <template slot-scope="scope">
-            <el-button type="text" size="small">²é¿´</el-button>
-            <el-button type="text" size="small">±à¼­</el-button>
-            <el-button type="text" size="small">ÒÆ³ı</el-button>
+            <el-button type="text" size="small">æŸ¥çœ‹</el-button>
+            <el-button type="text" size="small">ç¼–è¾‘</el-button>
+            <el-button type="text" size="small">ç§»é™¤</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -50,26 +53,33 @@
       return {
         tableData: [],
         showText: true,
-        state3: '',
-        timeout: null
+        username: '',
+        userphone: '',
+        timeout: null,
+        timeout1: null
       }
     },
     components: {
       BreadCrumb
     },
     mounted() {
-      let that = this;
-      this.$http({
-        method: 'get',
-        url: Config.host + ':' + Config.port + '/findAllAdmin',
-        params: {}
-      }).then(function (res) {
-        that.getAdminData(res);
-      }).catch(function (err) {
-        console.log(err)
-      });
+      this.getAdminInterface();
     },
     methods: {
+      getAdminInterface() {
+        let that = this;
+        this.$http({
+          method: 'get',
+          url: Config.host + ':' + Config.port + '/findAllAdmin',
+          params: {
+            phone: that.userphone
+          }
+        }).then(function (res) {
+          that.getAdminData(res);
+        }).catch(function (err) {
+          console.log(err)
+        });
+      },
       getAdminData(data) {
         let resData = data.data.res;
         if (resData.length > 0) {
@@ -78,12 +88,12 @@
               resData[i].userImg = 'NULL';
             }
             if (!resData[i].signature || resData[i].signature == '') {
-              resData[i].signature = 'Õâ¸ö¼Ò»ïÀÁµÄÒ»±Ê£¡'
+              resData[i].signature = 'è¿™ä¸ªå®¶ä¼™æ‡’çš„ä¸€ç¬”ï¼'
             }
             if (resData[i].sex == '1') {
-              resData[i].sex = 'ÄĞ';
+              resData[i].sex = 'ç”·';
             } else {
-              resData[i].sex = 'Å®';
+              resData[i].sex = 'å¥³';
             }
             if (resData[i].createTime) {
               resData[i].createTime = moment(resData[i].createTime).format('YYYY-MM-DD HH:mm:ss');
@@ -93,9 +103,8 @@
         }
       },
       querySearchAsync(queryString, cb) {
-        var restaurants = this.tableData;
-        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-        // µ÷ÓÃ callback ·µ»Ø½¨ÒéÁĞ±íµÄÊı¾İ
+        let restaurants = this.tableData;
+        let results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
           cb(results);
@@ -103,8 +112,11 @@
       },
       createStateFilter(queryString) {
         return (state) => {
-          return (state.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+          return (state.phone.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
+      },
+      handleSelectPhone(item) {
+        this.userphone = item.phone;
       }
     }
   }
@@ -121,7 +133,7 @@
   }
 
   .admin_list, .find_admin {
-    padding: 20px;
+    padding: 20px 0 0 20px;
   }
 
   .my-autocomplete li {
