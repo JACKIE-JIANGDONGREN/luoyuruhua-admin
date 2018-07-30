@@ -1,19 +1,22 @@
 <template>
   <div class="index_wrap">
     <div class="welcome">
-      <span>欢迎，</span>
+      <span>你好，</span>
       <span class="user_name">{{$store.state.userName}}</span>
-      <span>后台管理</span>
+      <span>，欢迎进入后台管理中心</span>
     </div>
     <ul class="ip_wrap">
       <li>登录IP：<span>{{ip}}</span></li>
-      <li>登录时间：<span>{{ (new Date(loginTime).getFullYear())+'/'+(new Date(loginTime).getMonth()+1)+'/'+(new Date(loginTime).getDate())+' '+(new Date(loginTime).getHours())+':'+(new Date(loginTime).getMinutes())+':'+(new Date(loginTime).getSeconds())}}</span>
+      <li>登录时间：<span>{{loginTime|dateFor}}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+  import Config from '../../util/config';
+  import moment from 'moment';
+
   export default {
     name: "Index",
     data() {
@@ -24,7 +27,7 @@
     },
     created() {
       let that = this;
-      this.$http.get('http://192.168.0.20:3000/getClientMsg', {
+      this.$http.get(Config.host + ':' + Config.port + '/getClientMsg', {
         params: {
           name: that.$store.state.userName
         }
@@ -32,13 +35,17 @@
         if (res.data.msg == '1') {
           that.ip = res.data.ip.toString().substr(7);
           that.loginTime = res.data.loginTime;
-
         }
       }).catch(function (err) {
         console.log(err)
       });
     },
     mounted() {
+    },
+    filters: {
+      dateFor(el) {
+        return moment(el).format('YYYY-MM-DD HH:mm:ss');
+      }
     }
   }
 </script>

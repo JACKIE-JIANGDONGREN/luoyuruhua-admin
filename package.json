@@ -5,7 +5,7 @@
   "author": "wiscgazf@163.com",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js --host 192.168.0.115",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
@@ -17,6 +17,7 @@
     "easyscroll": "^1.0.1",
     "element-ui": "^2.4.4",
     "jquery": "^3.3.1",
+    "moment": "^2.22.2",
     "swiper": "^4.2.2",
     "vue": "^2.5.2",
     "vue-awesome-swiper": "^3.1.3",
