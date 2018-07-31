@@ -108,7 +108,7 @@
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
           cb(results);
-        }, 3000 * Math.random());
+        }, 2000 * Math.random());
       },
       createStateFilter(queryString) {
         return (state) => {

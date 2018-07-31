@@ -31,7 +31,12 @@
         this.$store.state.spreadInfo ? this.$store.state.spreadInfo = false : this.$store.state.spreadInfo = true;
       },
       handleCommand(val) {
-        alert(val);
+        if (val == '1') {
+          this.cookie.setCookie('user', '', 0);
+          this.$store.state.userName = '';
+          this.$store.state.userPassword = '';
+          this.$router.replace({name: 'Login'})
+        }
       }
     }
   }
