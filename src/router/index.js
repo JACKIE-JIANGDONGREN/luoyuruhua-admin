@@ -194,6 +194,25 @@ export default new Router({
               path: ''
             }
           ]
+        },
+        {
+          path: 'adminDetail/:id',
+          name: 'AdminDetail',
+          component: resove => require(['../components/AdminDetail'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-管理员信息',
+            auth: true
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            },
+            {
+              title: '管理员信息',
+              path: ''
+            }
+          ]
         }
       ]
     }
