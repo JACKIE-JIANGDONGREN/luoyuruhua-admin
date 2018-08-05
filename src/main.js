@@ -41,6 +41,7 @@ router.beforeEach((to, from, next) => {
     }).then(function (res) {
       if (res.data.msg == '1') {
         store.state.userName = res.data.name;
+        store.state.userId = res.data.id;
         next();
       } else {
         next({path: '/', replace: true});

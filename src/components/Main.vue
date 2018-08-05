@@ -9,8 +9,8 @@
 </template>
 
 <script>
-  import LeftSlide from './LeftSlide';
-  import RightSlideTop from './RightSlideTop';
+  import LeftSlide from './public/LeftSlide';
+  import RightSlideTop from './public/RightSlideTop';
 
   export default {
     data() {

@@ -1,9 +1,9 @@
 <template>
   <div class="right_slide_top">
     <div class="spread" @click="spreadFun()">
-      <img src="../assets/spread.png" alt="">
+      <img src="../../assets/spread.png" alt="">
     </div>
-    <p class="user_title">»¶Ó­<span>{{$store.state.userName}}</span>»ØÀ´£¡</p>
+    <p class="user_title">æ¬¢è¿<span>{{$store.state.userName}}</span>å›æ¥ï¼</p>
     <div class="user_des">
       <el-dropdown trigger="click" @command="handleCommand">
         <div>
@@ -12,8 +12,9 @@
             class="el-icon-arrow-down el-icon--right"></i></span>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="0">¸öÈË×ÊÁÏ</el-dropdown-item>
-          <el-dropdown-item command="1">°²È«ÍË³ö</el-dropdown-item>
+          <el-dropdown-item command="0">ä¸ªäººèµ„æ–™</el-dropdown-item>
+          <el-dropdown-item command="1">ä¿®æ”¹å¯†ç </el-dropdown-item>
+          <el-dropdown-item command="2">å®‰å…¨é€€å‡º</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -31,11 +32,15 @@
         this.$store.state.spreadInfo ? this.$store.state.spreadInfo = false : this.$store.state.spreadInfo = true;
       },
       handleCommand(val) {
-        if (val == '1') {
+        if (val == '2') {
           this.cookie.setCookie('user', '', 0);
           this.$store.state.userName = '';
           this.$store.state.userPassword = '';
           this.$router.replace({name: 'Login'})
+        } else if (val == '0') {
+          this.$router.push({name: 'AdminDetail', params: {id: this.$store.state.userId}})
+        } else if (val == '1') {
+          this.$router.push({name: 'EditAdmin', params: {id: this.$store.state.userId}})
         }
       }
     }

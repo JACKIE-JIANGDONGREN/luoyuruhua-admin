@@ -9,6 +9,7 @@ Vue.use(Vuex);
 let state = {
   userName: '',
   userPassword: '',
+  userId: '',
   spreadInfo: false
 };
 

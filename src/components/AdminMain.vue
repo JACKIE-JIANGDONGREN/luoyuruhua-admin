@@ -32,8 +32,8 @@
         <el-table-column prop="signature" label="签名" :show-overflow-tooltip="showText"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
+            <el-button type="text" size="small" @click="linkToDetail(scope.row.id)">查看</el-button>
+            <el-button type="text" size="small" @click="linkToEdit(scope.row.id)">编辑</el-button>
             <el-button type="text" size="small">移除</el-button>
           </template>
         </el-table-column>
@@ -117,6 +117,28 @@
       },
       handleSelectPhone(item) {
         this.userphone = item.phone;
+      },
+      linkToDetail(id) {
+        if (id == this.$store.state.userId) {
+          this.$router.push({name: 'AdminDetail', params: {id: id}})
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '权限不足，无法查看其他管理员信息！',
+            type: 'warning'
+          });
+        }
+      },
+      linkToEdit(id) {
+        if (id == this.$store.state.userId) {
+          this.$router.push({name: 'EditAdmin', params: {id: id}})
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '权限不足，无法编辑其他管理员信息！',
+            type: 'warning'
+          });
+        }
       }
     }
   }

@@ -213,6 +213,25 @@ export default new Router({
               path: ''
             }
           ]
+        },
+        {
+          path: 'editAdmin/:id',
+          name: 'EditAdmin',
+          component: resove => require(['../components/EditAdmin'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-管理员信息',
+            auth: true
+          },
+          breadcrumb: [
+            {
+              title: '首页',
+              path: '/index'
+            },
+            {
+              title: '资料编辑',
+              path: ''
+            }
+          ]
         }
       ]
     }
