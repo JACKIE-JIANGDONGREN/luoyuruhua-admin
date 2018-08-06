@@ -1,47 +1,50 @@
 <template>
   <GeminiScrollbar class="admin_detail">
     <bread-crumb></bread-crumb>
-    <div class="add_admin_con">
-      <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="管理员名称" prop="name">
-          <el-input type="text" v-model="ruleForm2.name" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input type="text" v-model="ruleForm2.phone" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input type="text" v-model="ruleForm2.email" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <el-radio-group v-model="ruleForm2.sex">
-            <el-radio label="1">男</el-radio>
-            <el-radio label="0">女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input v-model.number="ruleForm2.age"></el-input>
-        </el-form-item>
-        <el-form-item label="个性签名">
-          <el-input type="textarea" v-model="ruleForm2.signature" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm2')" :loading="btnStatus.info">{{btnStatus.text}}
-          </el-button>
-          <el-button @click="resetForm('ruleForm2')">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-    <div class="com-upload-img">
-      <div class="img_group">
-        <div class="img_box" v-if="allowAddImg">
-          <input type="file" accept="image/*" @change="changeImg($event)">
-          <div class="filter"></div>
-        </div>
-        <div class="img_box" v-for="(item,index) in imgArr" :key="index">
-          <div class="img_show_box">
-            <img :src="item" alt="">
-            <i class="img_delete" @click="deleteImg(index)"
-               style="width: 20px;height: 20px;background: #f00;display: block;"></i>
+    <div class="edit_wrap">
+      <div class="add_admin_con">
+        <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px"
+                 class="demo-ruleForm">
+          <el-form-item label="管理员名称" prop="name">
+            <el-input type="text" v-model="ruleForm2.name" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" prop="phone">
+            <el-input type="text" v-model="ruleForm2.phone" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱">
+            <el-input type="text" v-model="ruleForm2.email" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="性别" prop="sex">
+            <el-radio-group v-model="ruleForm2.sex">
+              <el-radio :label="1">男</el-radio>
+              <el-radio :label="0">女</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="年龄" prop="age">
+            <el-input v-model.number="ruleForm2.age"></el-input>
+          </el-form-item>
+          <el-form-item label="个性签名">
+            <el-input type="textarea" v-model="ruleForm2.signature" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm2')" :loading="btnStatus.info">{{btnStatus.text}}
+            </el-button>
+            <el-button @click="resetForm('ruleForm2')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="com-upload-img">
+        <div class="img_group">
+          <div class="img_box" id="show_upload" v-if="allowAddImg">
+            <i>+</i>
+            <input type="file" accept="image/*" @change="changeImg($event)">
+            <div class="filter"></div>
+          </div>
+          <div class="img_box" v-for="(item,index) in imgArr" :key="index">
+            <div class="img_show_box">
+              <img :src="item" alt="">
+              <div><p class="img_delete" @click="deleteImg(index)">点击更换</p></div>
+            </div>
           </div>
         </div>
       </div>
@@ -137,7 +140,12 @@
               return false;
             }
 
-            if (files.item(dd).size > imgLimit * 102400) {
+            if (files.item(dd).size > imgLimit * 1000) {
+              _this.$notify({
+                title: '警告',
+                message: '图片大小不得超过2MB',
+                type: 'error'
+              });
               //to do sth
             } else {
               image.src = window.URL.createObjectURL(files.item(dd));
@@ -146,7 +154,7 @@
                 let w = 100,
                   h = 100,
                   scale = w / h;
-                w = 200;
+                w = 120;
                 h = w / scale;
                 // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
                 let quality = 0.7;
@@ -167,7 +175,7 @@
                 if (_this.imgArr.length <= 4) {
                   _this.imgArr.unshift('');
                   _this.imgArr.splice(0, 1, base64);//替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
-                  if (_this.imgArr.length >= 5) {
+                  if (_this.imgArr.length >= 1) {
                     _this.allowAddImg = false;
                   }
                 }
@@ -234,15 +242,26 @@
       }
     },
     mounted() {
-      console.log(this.$route.params.id);
       this.$http({
         method: 'get',
         url: Config.host + ':' + Config.port + '/adminDetail',
         params: {
           id: this.$route.params.id
         }
-      }).then(function (res) {
-        console.log(res)
+      }).then(res => {
+        let data = res.data.data;
+        this.imgArr[0] = require('public_img/726209185373770133.jpg');
+        this.ruleForm2.name = data.name;
+        this.ruleForm2.phone = data.phone;
+        this.ruleForm2.sex = data.sex;
+        this.ruleForm2.email = data.email;
+        this.ruleForm2.age = data.age;
+        if (data.signature == '' || !data.signature) {
+          this.ruleForm2.signature = '';
+        } else {
+          this.ruleForm2.signature = data.signature;
+        }
+
       }).catch(function (err) {
         console.log(err)
       });
@@ -252,7 +271,7 @@
 
 <style scoped>
   .com-upload-img {
-    padding: 20px 0 0 20px;
+    padding: 40px 0 0 50px;
   }
 
   .demo-ruleForm {
@@ -261,4 +280,88 @@
     height: 100%;
     overflow: auto;
   }
+
+  .edit_wrap {
+    overflow: hidden;
+  }
+
+  .edit_wrap .add_admin_con, .edit_wrap .com-upload-img {
+    float: left;
+  }
+
+  .com-upload-img .img_group {
+    overflow: hidden;
+  }
+
+  .img_group .img_box {
+    float: left;
+  }
+
+  #show_upload {
+    width: 100px;
+    height: 100px;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #show_upload input {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+  }
+
+  #show_upload i {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+  }
+
+  .img_box .img_show_box {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .img_box .img_show_box img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .img_box .img_show_box div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .3s linear 0s;
+    -webkit-transition: all .3s linear 0s;
+  }
+
+  .img_box .img_show_box div p {
+    line-height: 120px;
+    display: none;
+  }
+
+  .img_box .img_show_box:hover div {
+    background: rgba(0, 0, 0, .5);
+  }
+
+  .img_box .img_show_box:hover div p {
+    display: block;
+  }
+
 </style>
