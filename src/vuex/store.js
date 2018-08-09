@@ -15,7 +15,7 @@ let state = {
 
 let mutations = {
   isLogin(state) {
-    if (Cookie.getCookie('user')) {
+    if (Cookie.getCookie('user') != 0) {
       axios({
         method: 'post',
         url: Config.host + ':' + Config.port + '/isLogin',
@@ -26,6 +26,7 @@ let mutations = {
         if (res.data.msg == '1') {
           state.userPassword = res.data.password;
           state.userName = res.data.name;
+          state.userId = res.data.id;
         } else {
           Cookie.setCookie('user', '0');
         }

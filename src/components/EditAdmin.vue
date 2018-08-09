@@ -35,17 +35,13 @@
       </div>
       <div class="com-upload-img">
         <div class="img_group">
-          <div class="img_box" id="show_upload" v-if="allowAddImg">
-            <i>+</i>
-            <input type="file" accept="image/*" @change="changeImg($event)">
-            <div class="filter"></div>
-          </div>
-          <div class="img_box" v-for="(item,index) in imgArr" :key="index">
-            <div class="img_show_box">
-              <img :src="item" alt="">
-              <div><p class="img_delete" @click="deleteImg(index)">点击更换</p></div>
+          <div class="img_box" id="show_upload">
+            <img :src=url+ruleForm2.imgUrl alt="">
+            <div class="filter">
+              <input type="file" accept="image/*" @change="changeImg($event)">
             </div>
           </div>
+          <p>点击上传</p>
         </div>
       </div>
     </div>
@@ -91,18 +87,16 @@
         }, 1000);
       };
       return {
-        imgData: '',
-        imgArr: [],
-        imgSrc: '',
-        allowAddImg: true,
-        userId: '',
+        url: 'http://192.168.0.20:30001',
         ruleForm2: {
           name: '周宏宇',
           phone: '',
           email: '',
           age: '',
           sex: '',
-          signature: ''
+          signature: '',
+          imgUrl: '',
+          userId: '',
         },
         rules2: {
           name: [
@@ -171,14 +165,8 @@
                 ctx.drawImage(image, 0, 0, w, h);
                 let ext = image.src.substring(image.src.lastIndexOf(".") + 1).toLowerCase();//图片格式
                 let base64 = canvas.toDataURL("image/" + ext, quality);
-                // 回调函数返回base64的值
-                if (_this.imgArr.length <= 4) {
-                  _this.imgArr.unshift('');
-                  _this.imgArr.splice(0, 1, base64);//替换数组数据的方法，此处不能使用：this.imgArr[index] = url;
-                  if (_this.imgArr.length >= 1) {
-                    _this.allowAddImg = false;
-                  }
-                }
+                _this.ruleForm2.imgUrl = base64;
+                _this.url = '';
               }
             }
 
@@ -190,32 +178,26 @@
           }, 1000)
         }
       },
-      deleteImg: function (index) {
-        this.imgArr.splice(index, 1);
-        if (this.imgArr.length < 5) {
-          this.allowAddImg = true;
-        }
-      },
       submitForm(formName) {
         let that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
             that.btnStatus = {info: true, text: '提交中'};
             this.$http({
-              method: 'post',
-              url: Config.host + ':' + Config.port + '/addAdmin',
+              method: 'put',
+              url: Config.host + ':' + Config.port + '/editAdmin',
               data: that.ruleForm2
             }).then(function (res) {
-              if (res.data.msg == '1') {
+              if (res.data.suc == '1') {
                 that.btnStatus = {info: false, text: '提交'};
                 that.$notify({
                   title: '成功',
                   message: res.data.des,
                   type: 'success'
                 });
-                setTimeout(function () {
+                /*setTimeout(function () {
                   that.$router.push({name: 'AdminMain'});
-                }, 1000);
+                }, 1000);*/
               } else {
                 that.btnStatus = {info: false, text: '提交'};
                 that.$notify({
@@ -249,19 +231,20 @@
           id: this.$route.params.id
         }
       }).then(res => {
+        console.log(res.data.data)
         let data = res.data.data;
-        this.imgArr[0] = require('public_img/726209185373770133.jpg');
+        this.ruleForm2.imgUrl = data.userImg;
         this.ruleForm2.name = data.name;
         this.ruleForm2.phone = data.phone;
         this.ruleForm2.sex = data.sex;
         this.ruleForm2.email = data.email;
         this.ruleForm2.age = data.age;
+        this.ruleForm2.userId = data.id;
         if (data.signature == '' || !data.signature) {
           this.ruleForm2.signature = '';
         } else {
           this.ruleForm2.signature = data.signature;
         }
-
       }).catch(function (err) {
         console.log(err)
       });
@@ -290,78 +273,59 @@
   }
 
   .com-upload-img .img_group {
-    overflow: hidden;
-  }
-
-  .img_group .img_box {
-    float: left;
-  }
-
-  #show_upload {
-    width: 100px;
-    height: 100px;
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  #show_upload input {
-    display: block;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-  }
-
-  #show_upload i {
-    display: block;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-  }
-
-  .img_box .img_show_box {
-    position: relative;
     width: 120px;
     height: 120px;
+    position: relative;
     border-radius: 5px;
     -webkit-border-radius: 5px;
     overflow: hidden;
+    cursor: pointer;
   }
 
-  .img_box .img_show_box img {
+  .com-upload-img .img_group .img_box {
     width: 100%;
     height: 100%;
   }
 
-  .img_box .img_show_box div {
+  .com-upload-img .img_group img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .com-upload-img .img_group .filter {
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
-    color: #fff;
-    font-size: 16px;
-    text-align: center;
+    z-index: 100;
+  }
+
+  .com-upload-img .img_group .filter input {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
-    transition: all .3s linear 0s;
-    -webkit-transition: all .3s linear 0s;
   }
 
-  .img_box .img_show_box div p {
-    line-height: 120px;
-    display: none;
-  }
-
-  .img_box .img_show_box:hover div {
+  .com-upload-img .img_group:hover .filter {
     background: rgba(0, 0, 0, .5);
   }
 
-  .img_box .img_show_box:hover div p {
+  .com-upload-img .img_group:hover p {
     display: block;
   }
 
+  .com-upload-img .img_group p {
+    display: none;
+    color: #fff;
+    font-size: 14px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    z-index: 101;
+  }
 </style>

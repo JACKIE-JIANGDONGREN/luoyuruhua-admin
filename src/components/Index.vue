@@ -2,7 +2,7 @@
   <div class="index_wrap">
     <div class="welcome">
       <span>你好，</span>
-      <span class="user_name">{{$store.state.userName}}</span>
+      <span class="user_name">{{name}}</span>
       <span>，欢迎进入后台管理中心</span>
     </div>
     <ul class="ip_wrap">
@@ -16,25 +16,29 @@
 <script>
   import Config from '../../util/config';
   import moment from 'moment';
+  import bus from '../../util/eventBus';
 
   export default {
     name: "Index",
     data() {
       return {
         ip: '',
-        loginTime: ''
+        loginTime: '',
+        name: ''
       }
     },
     created() {
       let that = this;
       this.$http.get(Config.host + ':' + Config.port + '/getClientMsg', {
         params: {
-          name: that.$store.state.userName
+          name: that.cookie.getCookie('user')
         }
       }).then(function (res) {
         if (res.data.msg == '1') {
           that.ip = res.data.ip.toString().substr(7);
           that.loginTime = res.data.loginTime;
+          that.name = res.data.name;
+          bus.$emit('getUserName', that.name);
         }
       }).catch(function (err) {
         console.log(err)

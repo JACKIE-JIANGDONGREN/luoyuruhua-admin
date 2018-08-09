@@ -63,6 +63,7 @@
       BreadCrumb
     },
     mounted() {
+      this.$store.commit('isLogin');
       this.getAdminInterface();
     },
     methods: {

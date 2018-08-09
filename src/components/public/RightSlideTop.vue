@@ -3,12 +3,12 @@
     <div class="spread" @click="spreadFun()">
       <img src="../../assets/spread.png" alt="">
     </div>
-    <p class="user_title">欢迎<span>{{$store.state.userName}}</span>回来！</p>
+    <p class="user_title">欢迎<span>{{name}}</span>回来！</p>
     <div class="user_des">
       <el-dropdown trigger="click" @command="handleCommand">
         <div>
           <div class="user_img"><img src="~public_img/726209185373770133.jpg" alt=""></div>
-          <span class="el-dropdown-link">{{$store.state.userName}}<i
+          <span class="el-dropdown-link">{{name}}<i
             class="el-icon-arrow-down el-icon--right"></i></span>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -22,10 +22,14 @@
 </template>
 
 <script>
+  import bus from '../../../util/eventBus';
+
   export default {
     name: "RightSlide",
     data() {
-      return {}
+      return {
+        name: ''
+      }
     },
     methods: {
       spreadFun() {
@@ -43,6 +47,11 @@
           this.$router.push({name: 'EditAdmin', params: {id: this.$store.state.userId}})
         }
       }
+    },
+    created() {
+      bus.$on('getUserName', msg => {
+        this.name = msg;
+      });
     }
   }
 </script>

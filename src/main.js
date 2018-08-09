@@ -31,27 +31,8 @@ Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
   window.document.title = to.meta.title;
-  if (Cookie.getCookie('user') && to.meta.auth) { //如果有就直接到首页咯
-    axios({
-      method: 'post',
-      url: Config.host + ':' + Config.port + '/isLogin',
-      data: {
-        user: Cookie.getCookie('user')
-      }
-    }).then(function (res) {
-      if (res.data.msg == '1') {
-        store.state.userName = res.data.name;
-        store.state.userId = res.data.id;
-        next();
-      } else {
-        next({path: '/', replace: true});
-        Cookie.setCookie('user', '0');
-      }
-    }).catch(function (err) {
-      next({path: '/', replace: true});
-      Cookie.setCookie('user', '0');
-      console.log(err)
-    });
+  if (Cookie.getCookie('user') != 0) { //如果有就直接到首页咯
+    next();
   } else {
     if (to.path == '/') {
       next();
