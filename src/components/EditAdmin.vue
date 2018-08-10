@@ -188,16 +188,20 @@
               url: Config.host + ':' + Config.port + '/editAdmin',
               data: that.ruleForm2
             }).then(function (res) {
-              if (res.data.suc == '1') {
+              console.log(res.data)
+              if (res.data.msg == '1') {
                 that.btnStatus = {info: false, text: '提交'};
                 that.$notify({
                   title: '成功',
                   message: res.data.des,
                   type: 'success'
                 });
-                /*setTimeout(function () {
-                  that.$router.push({name: 'AdminMain'});
-                }, 1000);*/
+                that.$store.state.userPassword = '';
+                that.$store.state.userName = '';
+                that.$store.state.userId = '';
+                setTimeout(function () {
+                  that.$router.push({name: 'Login'});
+                }, 1000);
               } else {
                 that.btnStatus = {info: false, text: '提交'};
                 that.$notify({
@@ -231,7 +235,6 @@
           id: this.$route.params.id
         }
       }).then(res => {
-        console.log(res.data.data)
         let data = res.data.data;
         this.ruleForm2.imgUrl = data.userImg;
         this.ruleForm2.name = data.name;
