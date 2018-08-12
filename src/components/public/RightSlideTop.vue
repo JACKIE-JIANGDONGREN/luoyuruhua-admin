@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import bus from '../../../util/eventBus';
+  import Config from '../../../util/config';
 
   export default {
     name: "RightSlide",
@@ -37,7 +37,7 @@
       },
       handleCommand(val) {
         if (val == '2') {
-          this.cookie.setCookie('user', '', 0);
+          this.cookie.setCookie('user', '', 15);
           this.$store.state.userName = '';
           this.$store.state.userPassword = '';
           this.$router.replace({name: 'Login'})
@@ -49,8 +49,17 @@
       }
     },
     created() {
-      bus.$on('getUserName', msg => {
-        this.name = msg;
+
+    },
+    mounted() {
+      this.$http.get(Config.host + ':' + Config.port + '/getClientMsg', {
+        params: {
+          name: this.cookie.getCookie('user')
+        }
+      }).then(data => {
+        this.name = data.data.name;
+      }).catch(err => {
+        console.log(err)
       });
     }
   }

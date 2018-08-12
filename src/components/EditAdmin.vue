@@ -188,7 +188,6 @@
               url: Config.host + ':' + Config.port + '/editAdmin',
               data: that.ruleForm2
             }).then(function (res) {
-              console.log(res.data)
               if (res.data.msg == '1') {
                 that.btnStatus = {info: false, text: '提交'};
                 that.$notify({

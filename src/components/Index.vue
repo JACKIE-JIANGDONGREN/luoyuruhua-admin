@@ -28,23 +28,19 @@
       }
     },
     created() {
-      let that = this;
       this.$http.get(Config.host + ':' + Config.port + '/getClientMsg', {
         params: {
-          name: that.cookie.getCookie('user')
+          name: this.cookie.getCookie('user')
         }
-      }).then(function (res) {
+      }).then((res) => {
         if (res.data.msg == '1') {
-          that.ip = res.data.ip.toString().substr(7);
-          that.loginTime = res.data.loginTime;
-          that.name = res.data.name;
-          bus.$emit('getUserName', that.name);
+          this.ip = res.data.ip.toString().substr(7);
+          this.loginTime = res.data.loginTime;
+          this.name = res.data.name;
         }
       }).catch(function (err) {
         console.log(err)
       });
-    },
-    mounted() {
     },
     filters: {
       dateFor(el) {
