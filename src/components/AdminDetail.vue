@@ -22,8 +22,6 @@
 </template>
 <script>
   import BreadCrumb from './public/BreadCrumb';
-  import Config from '../../util/config';
-
   export default {
     name: 'AdminDetail',
     data() {
@@ -39,7 +37,7 @@
     mounted() {
       this.$http({
         method: 'get',
-        url: Config.host + ':' + Config.port + '/adminDetail',
+        url: '/api/adminDetail',
         params: {
           id: this.$route.params.id
         }

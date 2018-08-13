@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import Cookie from '../../util/cookieConfg';
-import Config from "../../util/config";
 
 Vue.use(Vuex);
 
@@ -18,7 +17,7 @@ let mutations = {
     if (Cookie.getCookie('user') != 0) {
       axios({
         method: 'post',
-        url: Config.host + ':' + Config.port + '/isLogin',
+        url: '/api/isLogin',
         data: {
           user: Cookie.getCookie('user')
         }

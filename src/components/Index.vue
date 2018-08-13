@@ -10,13 +10,12 @@
       <li>登录时间：<span>{{loginTime|dateFor}}</span>
       </li>
     </ul>
+    <img :src="userImg" alt="">
   </div>
 </template>
 
 <script>
-  import Config from '../../util/config';
   import moment from 'moment';
-  import bus from '../../util/eventBus';
 
   export default {
     name: "Index",
@@ -24,16 +23,18 @@
       return {
         ip: '',
         loginTime: '',
-        name: ''
+        name: '',
+        userImg: ''
       }
     },
     created() {
-      this.$http.get(Config.host + ':' + Config.port + '/getClientMsg', {
+      this.$http.get('/api/getClientMsg', {
         params: {
           name: this.cookie.getCookie('user')
         }
       }).then((res) => {
         if (res.data.msg == '1') {
+          this.userImg = res.data.userImg;
           this.ip = res.data.ip.toString().substr(7);
           this.loginTime = res.data.loginTime;
           this.name = res.data.name;

@@ -22,8 +22,6 @@
 </template>
 
 <script>
-  import Config from '../../../util/config';
-
   export default {
     name: "RightSlide",
     data() {
@@ -52,7 +50,7 @@
 
     },
     mounted() {
-      this.$http.get(Config.host + ':' + Config.port + '/getClientMsg', {
+      this.$http.get('/api/getClientMsg', {
         params: {
           name: this.cookie.getCookie('user')
         }

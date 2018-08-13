@@ -44,7 +44,6 @@
 
 <script>
   import BreadCrumb from './public/BreadCrumb';
-  import Config from '../../util/config';
   import moment from 'moment';  // use time plugs
 
   export default {
@@ -71,7 +70,7 @@
         let that = this;
         this.$http({
           method: 'get',
-          url: Config.host + ':' + Config.port + '/findAllAdmin',
+          url: '/api/findAllAdmin',
           params: {
             phone: that.userphone
           }

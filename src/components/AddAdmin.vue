@@ -38,8 +38,6 @@
 </template>
 <script>
   import BreadCrumb from './public/BreadCrumb';
-  import Config from '../../util/config';
-
   export default {
     name: "AddAdmin",
     data() {
@@ -127,7 +125,7 @@
             that.btnStatus = {info: true, text: '提交中'};
             this.$http({
               method: 'post',
-              url: Config.host + ':' + Config.port + '/addAdmin',
+              url: '/api/addAdmin',
               data: that.ruleForm2
             }).then(function (res) {
               if (res.data.msg == '1') {

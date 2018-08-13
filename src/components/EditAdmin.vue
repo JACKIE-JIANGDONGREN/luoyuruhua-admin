@@ -49,7 +49,6 @@
 </template>
 <script>
   import BreadCrumb from './public/BreadCrumb';
-  import Config from '../../util/config';
 
   export default {
     name: 'AdminDetail',
@@ -185,7 +184,7 @@
             that.btnStatus = {info: true, text: '提交中'};
             this.$http({
               method: 'put',
-              url: Config.host + ':' + Config.port + '/editAdmin',
+              url: '/api/editAdmin',
               data: that.ruleForm2
             }).then(function (res) {
               if (res.data.msg == '1') {
@@ -229,7 +228,7 @@
     mounted() {
       this.$http({
         method: 'get',
-        url: Config.host + ':' + Config.port + '/adminDetail',
+        url: '/api/adminDetail',
         params: {
           id: this.$route.params.id
         }
