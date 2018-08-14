@@ -17,7 +17,7 @@ let mutations = {
     if (Cookie.getCookie('user') != 0) {
       axios({
         method: 'post',
-        url: '/api/isLogin',
+        url: '/isLogin',
         data: {
           user: Cookie.getCookie('user')
         }

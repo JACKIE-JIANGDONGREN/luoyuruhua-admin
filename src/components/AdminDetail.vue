@@ -22,6 +22,7 @@
 </template>
 <script>
   import BreadCrumb from './public/BreadCrumb';
+
   export default {
     name: 'AdminDetail',
     data() {
@@ -37,7 +38,7 @@
     mounted() {
       this.$http({
         method: 'get',
-        url: '/api/adminDetail',
+        url: '/adminDetail',
         params: {
           id: this.$route.params.id
         }

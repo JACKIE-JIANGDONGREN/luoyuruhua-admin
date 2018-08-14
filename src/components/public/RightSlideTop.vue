@@ -7,7 +7,7 @@
     <div class="user_des">
       <el-dropdown trigger="click" @command="handleCommand">
         <div>
-          <div class="user_img"><img src="~public_img/726209185373770133.jpg" alt=""></div>
+          <div class="user_img"><img :src="userImg" alt=""></div>
           <span class="el-dropdown-link">{{name}}<i
             class="el-icon-arrow-down el-icon--right"></i></span>
         </div>
@@ -26,7 +26,8 @@
     name: "RightSlide",
     data() {
       return {
-        name: ''
+        name: '',
+        userImg: ''
       }
     },
     methods: {
@@ -50,12 +51,13 @@
 
     },
     mounted() {
-      this.$http.get('/api/getClientMsg', {
+      this.$http.get('/getClientMsg', {
         params: {
           name: this.cookie.getCookie('user')
         }
       }).then(data => {
         this.name = data.data.name;
+        this.userImg = data.data.userImg;
       }).catch(err => {
         console.log(err)
       });

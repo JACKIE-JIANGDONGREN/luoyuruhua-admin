@@ -28,7 +28,13 @@
         <el-table-column prop="age" label="年龄"></el-table-column>
         <el-table-column prop="phone" label="手机号"></el-table-column>
         <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="showText"></el-table-column>
-        <el-table-column prop="userImg" label="头像"></el-table-column>
+        <el-table-column prop="userImg" label="头像">
+          <template slot-scope="scope">
+            <div class="user_img">
+              <img :src="scope.row.userImg" alt="">
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="signature" label="签名" :show-overflow-tooltip="showText"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template slot-scope="scope">
@@ -70,7 +76,7 @@
         let that = this;
         this.$http({
           method: 'get',
-          url: '/api/findAllAdmin',
+          url: '/findAllAdmin',
           params: {
             phone: that.userphone
           }
@@ -165,6 +171,13 @@
 
   .my-autocomplete .name {
     text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .user_img img {
+    width: 60px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
     overflow: hidden;
   }
 </style>

@@ -10,6 +10,8 @@
 </template>
 
 <script>
+  import routerData from '../../../util/breadCrumbConfig';
+
   export default {
     name: "BreadCrumb",
     data() {
@@ -18,14 +20,9 @@
       }
     },
     mounted() {
-      let getRoutesOptions = this.$router.options.routes;
-      for (var i = 0; i < getRoutesOptions.length; i++) {
-        if (getRoutesOptions[i].children) {
-          for (var j = 0; j < getRoutesOptions[i].children.length; j++) {
-            if (getRoutesOptions[i].children[j].name == this.$route.name) {
-              this.breadcrumbData = getRoutesOptions[i].children[j].breadcrumb;
-            }
-          }
+      for (var i = 0; i < routerData.length; i++) {
+        if (routerData[i].name == this.$route.name) {
+          this.breadcrumbData = routerData[i].breadcrumb;
         }
       }
     }
@@ -34,7 +31,6 @@
 
 <style scoped>
   .breadcrumb_wrap {
-    /*margin: 30px;*/
     padding: 20px;
     border-bottom: solid 2px #CAE7FF;
   }

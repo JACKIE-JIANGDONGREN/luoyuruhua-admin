@@ -125,7 +125,7 @@
             that.btnStatus = {info: true, text: '提交中'};
             this.$http({
               method: 'post',
-              url: '/api/addAdmin',
+              url: '/addAdmin',
               data: that.ruleForm2
             }).then(function (res) {
               if (res.data.msg == '1') {

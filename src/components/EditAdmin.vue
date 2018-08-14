@@ -36,7 +36,7 @@
       <div class="com-upload-img">
         <div class="img_group">
           <div class="img_box" id="show_upload">
-            <img :src=url+ruleForm2.imgUrl alt="">
+            <img :src=ruleForm2.imgUrl alt="">
             <div class="filter">
               <input type="file" accept="image/*" @change="changeImg($event)">
             </div>
@@ -86,7 +86,6 @@
         }, 1000);
       };
       return {
-        url: 'http://192.168.0.20:30001',
         ruleForm2: {
           name: '周宏宇',
           phone: '',
@@ -184,7 +183,7 @@
             that.btnStatus = {info: true, text: '提交中'};
             this.$http({
               method: 'put',
-              url: '/api/editAdmin',
+              url: '/editAdmin',
               data: that.ruleForm2
             }).then(function (res) {
               if (res.data.msg == '1') {
@@ -228,7 +227,7 @@
     mounted() {
       this.$http({
         method: 'get',
-        url: '/api/adminDetail',
+        url: '/adminDetail',
         params: {
           id: this.$route.params.id
         }

@@ -38,7 +38,7 @@
         }
         this.$http({
           method: 'post',
-          url: '/api/login',
+          url: '/login',
           data: {
             name: that.$store.state.userName,
             password: that.$store.state.userPassword
