@@ -148,5 +148,18 @@ export default [
         path: ''
       }
     ]
+  },
+  {
+    name: 'ChangeAdminPsw',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/index'
+      },
+      {
+        title: '修改密码',
+        path: ''
+      }
+    ]
   }
 ]

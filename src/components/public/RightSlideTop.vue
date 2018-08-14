@@ -39,11 +39,11 @@
           this.cookie.setCookie('user', '', 15);
           this.$store.state.userName = '';
           this.$store.state.userPassword = '';
-          this.$router.replace({name: 'Login'})
+          this.$router.replace({name: 'Login'});
         } else if (val == '0') {
           this.$router.push({name: 'AdminDetail', params: {id: this.$store.state.userId}})
         } else if (val == '1') {
-          this.$router.push({name: 'EditAdmin', params: {id: this.$store.state.userId}})
+          this.$router.push({name: 'ChangeAdminPsw', params: {id: this.$store.state.userId}})
         }
       }
     },

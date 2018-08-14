@@ -46,6 +46,14 @@ export default new Router({
           }
         },
         {
+          path: 'changePsw/:id',
+          name: 'ChangeAdminPsw',
+          component: resove => require(['../components/ChangeAdminPsw'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-修改密码'
+          }
+        },
+        {
           path: 'userAdmin',
           name: 'UserMain',
           component: resove => require(['../components/UserMain'], resove),

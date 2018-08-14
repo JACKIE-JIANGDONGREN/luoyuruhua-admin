@@ -14,7 +14,7 @@
           </li>
         </ul>
         <div class="user_img">
-          <img src="~public_img/726209185373770133.jpg" alt="">
+          <img :src="userData.userImg" alt="">
         </div>
       </div>
     </div>
