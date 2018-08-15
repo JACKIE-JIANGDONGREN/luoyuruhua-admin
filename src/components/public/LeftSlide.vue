@@ -1,7 +1,8 @@
 <template>
   <div class="main_left">
     <div class="main_left_logo" style="text-align: center;">
-      <!--<span style="color: #fff;line-height: 70px;">{{$route.path}}</span>-->
+      <router-link :to="{name:'Index'}" tag="p" v-if="$store.state.spreadInfo">lyrh</router-link>
+      <router-link :to="{name:'Index'}" tag="p" v-else>lyrh博客</router-link>
     </div>
     <el-menu router :default-active="$route.path" unique-opened background-color="#545c64" class="el-menu-vertical-demo"
              :collapse="$store.state.spreadInfo"
@@ -98,7 +99,6 @@
       }
     },
     mounted() {
-      // console.log(this.$router)
     }
   }
 </script>
@@ -124,5 +124,13 @@
   .main_left_logo {
     width: 100%;
     height: 70px;
+    text-align: center;
+  }
+
+  .main_left_logo p {
+    line-height: 70px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
   }
 </style>

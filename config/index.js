@@ -10,9 +10,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/': {
-        target: 'http://192.168.0.20:30001', // ½Ó¿ÚµÄÓòÃû
-        // secure: false, // Èç¹ûÊÇhttps½Ó¿Ú£¬ĞèÒªÅäÖÃÕâ¸ö²ÎÊı
-        changeOrigin: true, // Èç¹û½Ó¿Ú¿çÓò£¬ĞèÒª½øĞĞÕâ¸ö²ÎÊıÅäÖÃ
+        target: 'http://192.168.0.20:30001', // æ¥å£çš„åŸŸå
+        // secure: false,  // å¦‚æœæ˜¯httpsæ¥å£ï¼Œéœ€è¦é…ç½®è¿™ä¸ªå‚æ•°
+        changeOrigin: true, // å¦‚æœæ¥å£è·¨åŸŸï¼Œéœ€è¦è¿›è¡Œè¿™ä¸ªå‚æ•°é…ç½®
         pathRewrite: {
           '^/api': ''
         }
