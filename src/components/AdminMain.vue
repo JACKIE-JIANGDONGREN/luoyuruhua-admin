@@ -20,30 +20,35 @@
       <el-button type="primary" icon="el-icon-search" size="small" @click="getAdminInterface()">搜索</el-button>
     </div>
     <div class="admin_list">
-      <el-table :data="tableData" stripe style="width: 100%">
-        <el-table-column type="index" width="50"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="showText"></el-table-column>
-        <el-table-column prop="name" label="管理员"></el-table-column>
-        <el-table-column prop="sex" label="性别"></el-table-column>
-        <el-table-column prop="age" label="年龄"></el-table-column>
-        <el-table-column prop="phone" label="手机号"></el-table-column>
-        <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="showText"></el-table-column>
-        <el-table-column prop="userImg" label="头像">
-          <template slot-scope="scope">
-            <div class="user_img">
-              <img :src="scope.row.userImg" alt="">
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="signature" label="签名" :show-overflow-tooltip="showText"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="150">
-          <template slot-scope="scope">
-            <el-button type="text" size="small" @click="linkToDetail(scope.row.id)">查看</el-button>
-            <el-button type="text" size="small" @click="linkToEdit(scope.row.id)">编辑</el-button>
-            <el-button type="text" size="small">移除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <template v-if="tableData.length>0">
+        <el-table :data="tableData" stripe style="width: 100%">
+          <el-table-column type="index" width="50"></el-table-column>
+          <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column prop="name" label="管理员"></el-table-column>
+          <el-table-column prop="sex" label="性别"></el-table-column>
+          <el-table-column prop="age" label="年龄"></el-table-column>
+          <el-table-column prop="phone" label="手机号"></el-table-column>
+          <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column prop="userImg" label="头像">
+            <template slot-scope="scope">
+              <div class="user_img">
+                <img :src="scope.row.userImg" alt="">
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="signature" label="签名" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column fixed="right" label="操作" width="150">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click="linkToDetail(scope.row.id)">查看</el-button>
+              <el-button type="text" size="small" @click="linkToEdit(scope.row.id)">编辑</el-button>
+              <el-button type="text" size="small">移除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
+      <template v-else>
+        <p>{{noData}}</p>
+      </template>
     </div>
   </GeminiScrollbar>
 </template>
@@ -61,7 +66,8 @@
         username: '',
         userphone: '',
         timeout: null,
-        timeout1: null
+        timeout1: null,
+        noData: ''
       }
     },
     components: {
@@ -106,6 +112,9 @@
             }
           }
           this.tableData = resData;
+        } else {
+          this.tableData = [];
+          this.noData = '没有找到合适的资源';
         }
       },
       querySearchAsync(queryString, cb) {
@@ -179,5 +188,11 @@
     border-radius: 5px;
     -webkit-border-radius: 5px;
     overflow: hidden;
+  }
+
+  .admin_list > p {
+    text-align: center;
+    line-height: 70px;
+    color: #f00;
   }
 </style>
