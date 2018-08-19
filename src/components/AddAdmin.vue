@@ -12,6 +12,12 @@
         <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="ruleForm2.password" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item label="所属权限">
+          <el-select v-model="ruleForm2.permissions" placeholder="请选择权限类型">
+            <el-option label="作者" value="auth"></el-option>
+            <el-option label="管理员" value="admin"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="邮箱">
           <el-input type="text" v-model="ruleForm2.email" auto-complete="off"></el-input>
         </el-form-item>
@@ -38,6 +44,7 @@
 </template>
 <script>
   import BreadCrumb from './public/BreadCrumb';
+
   export default {
     name: "AddAdmin",
     data() {
@@ -92,7 +99,8 @@
           email: '',
           age: '',
           sex: '',
-          signature: ''
+          signature: '',
+          permissions: 'admin'
         },
         rules2: {
           name: [

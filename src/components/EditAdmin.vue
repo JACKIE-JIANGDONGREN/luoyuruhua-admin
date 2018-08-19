@@ -11,6 +11,12 @@
           <el-form-item label="手机号" prop="phone">
             <el-input type="text" v-model="ruleForm2.phone" auto-complete="off"></el-input>
           </el-form-item>
+          <el-form-item label="所属权限">
+            <el-select v-model="ruleForm2.permissions" placeholder="请选择权限类型">
+              <el-option label="作者" value="auth"></el-option>
+              <el-option label="管理员" value="admin"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="邮箱">
             <el-input type="text" v-model="ruleForm2.email" auto-complete="off"></el-input>
           </el-form-item>
@@ -95,6 +101,7 @@
           signature: '',
           imgUrl: '',
           userId: '',
+          permissions: ''
         },
         rules2: {
           name: [
@@ -240,6 +247,7 @@
         this.ruleForm2.email = data.email;
         this.ruleForm2.age = data.age;
         this.ruleForm2.userId = data.id;
+        this.ruleForm2.permissions = data.permissions;
         if (data.signature == '' || !data.signature) {
           this.ruleForm2.signature = '';
         } else {

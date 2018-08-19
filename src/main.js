@@ -31,13 +31,17 @@ Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
   window.document.title = to.meta.title;
-  if (Cookie.getCookie('user') != 0) { //如果有就直接到首页咯
-    next();
+  if (to.matched.length === 0) {
+    from.name ? next({name: from.name}) : next('/');
   } else {
-    if (to.path == '/') {
+    if (Cookie.getCookie('user') != 0) { //如果有就直接到首页咯
       next();
     } else {
-      next({path: '/', replace: true});
+      if (to.path == '/') {
+        next();
+      } else {
+        next({path: '/', replace: true});
+      }
     }
   }
 });

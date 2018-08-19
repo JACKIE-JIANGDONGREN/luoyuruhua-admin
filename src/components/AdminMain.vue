@@ -27,7 +27,7 @@
           <el-table-column prop="name" label="管理员"></el-table-column>
           <el-table-column prop="sex" label="性别"></el-table-column>
           <el-table-column prop="age" label="年龄"></el-table-column>
-          <el-table-column prop="phone" label="手机号"></el-table-column>
+          <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="showText"></el-table-column>
           <el-table-column prop="email" label="邮箱" :show-overflow-tooltip="showText"></el-table-column>
           <el-table-column prop="userImg" label="头像">
             <template slot-scope="scope">
@@ -37,6 +37,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="signature" label="签名" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column prop="permissions" label="拥有权限" :show-overflow-tooltip="showText"></el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="linkToDetail(scope.row.id)">查看</el-button>
@@ -110,6 +111,11 @@
             if (resData[i].createTime) {
               resData[i].createTime = moment(resData[i].createTime).format('YYYY-MM-DD HH:mm:ss');
             }
+            if (resData[i].permissions == 'auth') {
+              resData[i].permissions = '作者'
+            } else if (resData[i].permissions == 'admin') {
+              resData[i].permissions = '管理员'
+            }
           }
           this.tableData = resData;
         } else {
@@ -134,26 +140,36 @@
         this.userphone = item.phone;
       },
       linkToDetail(id) {
-        if (id == this.$store.state.userId) {
-          this.$router.push({name: 'AdminDetail', params: {id: id}})
-        } else {
-          this.$notify({
-            title: '警告',
-            message: '权限不足，无法查看其他管理员信息！',
-            type: 'warning'
-          });
-        }
+        this.linkTo(id, 'AdminDetail');
       },
       linkToEdit(id) {
-        if (id == this.$store.state.userId) {
-          this.$router.push({name: 'EditAdmin', params: {id: id}})
-        } else {
-          this.$notify({
-            title: '警告',
-            message: '权限不足，无法编辑其他管理员信息！',
-            type: 'warning'
-          });
-        }
+        this.linkTo(id, 'EditAdmin');
+      },
+      linkTo(id, isAuth) {
+        this.$http({
+          method: 'get',
+          url: '/adminDetail',
+          params: {
+            id: this.$store.state.userId
+          }
+        }).then((data) => {
+          if (data.data.data.permissions == 'auth') {
+            this.$router.push({name: isAuth, params: {id: id}})
+          } else {
+            if (id == this.$store.state.userId) {
+              this.$router.push({name: isAuth, params: {id: id}})
+            } else {
+              this.$notify({
+                title: '警告',
+                message: '权限不足，无法编辑其他管理员信息！',
+                type: 'warning'
+              });
+            }
+          }
+        }).catch((err) => {
+          this.$message({message: '登录异常，请联系管理员！', type: 'error'});
+          console.log(err)
+        })
       }
     }
   }
