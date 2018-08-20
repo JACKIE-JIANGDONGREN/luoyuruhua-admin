@@ -151,20 +151,20 @@
       linkTo(id, isAuth) {
         this.$http({
           method: 'get',
-          url: '/adminDetail',
+          url: '/authPermission',
           params: {
-            id: this.$store.state.userId
+            name: this.cookie.getCookie('user')
           }
         }).then((data) => {
-          if (data.data.data.permissions == 'auth') {
+          if (data.data.isAuth == 'auth') {
             this.$router.push({name: isAuth, params: {id: id}})
           } else {
-            if (id == this.$store.state.userId) {
+            if (id == data.data.id) {
               this.$router.push({name: isAuth, params: {id: id}})
             } else {
               this.$notify({
                 title: '警告',
-                message: '权限不足，无法编辑其他管理员信息！',
+                message: '权限不足，无法编辑或查看其他管理员信息！',
                 type: 'warning'
               });
             }

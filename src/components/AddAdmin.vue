@@ -180,6 +180,7 @@
     },
     mounted() {
       this.$http({
+        method: 'get',
         url: '/authPermission',
         params: {
           name: this.cookie.getCookie('user')

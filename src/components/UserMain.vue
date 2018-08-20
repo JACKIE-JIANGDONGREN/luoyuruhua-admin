@@ -8,7 +8,7 @@
         :fetch-suggestions="querySearchAsync"
         @select="handleSelectName"
         size="small"
-        placeholder="ÓÃ»§Ãû">
+        placeholder="ç”¨æˆ·å">
         <i
           class="el-icon-edit el-input__icon"
           slot="suffix">
@@ -17,37 +17,36 @@
           <span class="name">{{ item.name }}</span>
         </template>
       </el-autocomplete>
-      <el-button type="primary" icon="el-icon-search" size="small" @click="getAdminInterface()">ËÑË÷</el-button>
+      <el-button type="primary" icon="el-icon-search" size="small" @click="getAdminInterface()">æœç´¢</el-button>
     </div>
     <div class="admin_list">
       <template v-if="tableData.length>0">
         <el-table :data="tableData" stripe style="width: 100%" @selection-change="selectionChange" stripe
                   :row-key='tableData.id' fit highlight-current-row>
           <el-table-column type="selection" width="55" align="center"></el-table-column>
-          <el-table-column prop="createTime" label="´´½¨Ê±¼ä" :show-overflow-tooltip="showText">
+          <el-table-column prop="createTime" label="åˆ›å»ºæ—¶é—´" :show-overflow-tooltip="showText">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
               <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="ÓÃ»§Ãû"></el-table-column>
-          <el-table-column prop="sex" label="ĞÔ±ğ"></el-table-column>
-          <el-table-column prop="age" label="ÄêÁä"></el-table-column>
-          <el-table-column prop="phone" label="ÊÖ»úºÅ" :show-overflow-tooltip="showText"></el-table-column>
-          <el-table-column prop="email" label="ÓÊÏä" :show-overflow-tooltip="showText"></el-table-column>
-          <el-table-column prop="userImg" label="Í·Ïñ">
+          <el-table-column prop="name" label="ç”¨æˆ·å"></el-table-column>
+          <el-table-column prop="sex" label="æ€§åˆ«"></el-table-column>
+          <el-table-column prop="age" label="å¹´é¾„"></el-table-column>
+          <el-table-column prop="phone" label="æ‰‹æœºå·" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column prop="email" label="é‚®ç®±" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column prop="userImg" label="å¤´åƒ">
             <template slot-scope="scope">
               <div class="user_img">
                 <img :src="scope.row.userImg" alt="">
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="signature" label="Ç©Ãû" :show-overflow-tooltip="showText"></el-table-column>
-          <el-table-column fixed="right" label="²Ù×÷" width="150">
+          <el-table-column prop="signature" label="ç­¾å" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column fixed="right" label="æ“ä½œ" width="150">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="linkToDetail(scope.row.id)">²é¿´</el-button>
-              <el-button type="text" size="small" @click="linkToEdit(scope.row.id)">±à¼­</el-button>
-              <el-button type="text" size="small">ÒÆ³ı</el-button>
+              <el-button type="text" size="small" @click="linkToEdit(scope.row.id)">ç¼–è¾‘</el-button>
+              <el-button type="text" size="small">ç§»é™¤</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -55,6 +54,18 @@
       <template v-else>
         <p>{{noData}}</p>
       </template>
+      <div class="pagination">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[5, 25, 35, 50]"
+          :page-size="100"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="400">
+        </el-pagination>
+      </div>
     </div>
   </GeminiScrollbar>
 </template>
@@ -72,7 +83,8 @@
         name: '',
         timeout: null,
         timeout1: null,
-        noData: ''
+        noData: '',
+        currentPage: 1
       }
     },
     components: {
@@ -98,11 +110,10 @@
       },
       getAdminData(data) {
         let resData = data.data.Datas;
-        console.log(resData)
         if (resData.length > 0) {
           for (var i = 0; i < resData.length; i++) {
             if (!resData[i].signature || resData[i].signature == '') {
-              resData[i].signature = 'Õâ¸ö¼Ò»ïÀÁµÄÒ»±Ê£¡'
+              resData[i].signature = 'è¿™ä¸ªå®¶ä¼™æ‡’çš„ä¸€ç¬”ï¼'
             }
             if (resData[i].age == '' || !resData[i].age) {
               resData[i].age = 'NULL';
@@ -113,12 +124,12 @@
             if (resData[i].email == '') {
               resData[i].email = 'NULL';
             }
-            if (resData[i].sex == '') {
+            if (resData[i].sex == '' || !resData[i].sex) {
               resData[i].sex = 'NULL';
             } else if (resData[i].sex == '1') {
-              resData[i].sex = 'ÄĞ';
+              resData[i].sex = 'ç”·';
             } else {
-              resData[i].sex = 'Å®';
+              resData[i].sex = 'å¥³';
             }
             if (resData[i].createTime) {
               resData[i].createTime = moment(resData[i].createTime).format('YYYY-MM-DD HH:mm:ss');
@@ -127,7 +138,7 @@
           this.tableData = resData;
         } else {
           this.tableData = [];
-          this.noData = 'Ã»ÓĞÕÒµ½ºÏÊÊµÄ×ÊÔ´';
+          this.noData = 'æ²¡æœ‰æ‰¾åˆ°åˆé€‚çš„èµ„æº';
         }
       },
       querySearchAsync(queryString, cb) {
@@ -145,9 +156,6 @@
       },
       handleSelectName(item) {
         this.name = item.name;
-      },
-      linkToDetail(id) {
-        this.linkTo(id, 'AdminDetail');
       },
       linkToEdit(id) {
         this.linkTo(id, 'EditAdmin');
@@ -167,14 +175,14 @@
               this.$router.push({name: isAuth, params: {id: id}})
             } else {
               this.$notify({
-                title: '¾¯¸æ',
-                message: 'È¨ÏŞ²»×ã£¬ÎŞ·¨±à¼­ÆäËû¹ÜÀíÔ±ĞÅÏ¢£¡',
+                title: 'è­¦å‘Š',
+                message: 'æƒé™ä¸è¶³ï¼Œæ— æ³•ç¼–è¾‘å…¶ä»–ç®¡ç†å‘˜ä¿¡æ¯ï¼',
                 type: 'warning'
               });
             }
           }
         }).catch((err) => {
-          this.$message({message: 'µÇÂ¼Òì³££¬ÇëÁªÏµ¹ÜÀíÔ±£¡', type: 'error'});
+          this.$message({message: 'ç™»å½•å¼‚å¸¸ï¼Œè¯·è”ç³»ç®¡ç†å‘˜ï¼', type: 'error'});
           console.log(err)
         })
       },
@@ -185,6 +193,12 @@
           this.groupOprate.ids.push(selection[i].id)
         }
         console.log(this.groupOprate.ids)*/
+      },
+      handleSizeChange(val) {
+        console.log(`æ¯é¡µ ${val} æ¡`);
+      },
+      handleCurrentChange(val) {
+        console.log(`å½“å‰é¡µ: ${val}`);
       }
     }
   }
@@ -225,5 +239,10 @@
     text-align: center;
     line-height: 70px;
     color: #f00;
+  }
+
+  .pagination {
+    float: right;
+    padding: 20px 50px;
   }
 </style>
