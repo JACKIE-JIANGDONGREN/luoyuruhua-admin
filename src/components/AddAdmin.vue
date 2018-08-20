@@ -4,39 +4,41 @@
     <div class="add_admin_con">
       <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
         <el-form-item label="管理员名称" prop="name">
-          <el-input type="text" v-model="ruleForm2.name" auto-complete="off"></el-input>
+          <el-input type="text" v-model="ruleForm2.name" auto-complete="off" :disabled="permissions"></el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input type="text" v-model="ruleForm2.phone" auto-complete="off"></el-input>
+          <el-input type="text" v-model="ruleForm2.phone" auto-complete="off" :disabled="permissions"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="ruleForm2.password" auto-complete="off"></el-input>
+          <el-input type="password" v-model="ruleForm2.password" auto-complete="off" :disabled="permissions"></el-input>
         </el-form-item>
         <el-form-item label="所属权限">
-          <el-select v-model="ruleForm2.permissions" placeholder="请选择权限类型">
+          <el-select v-model="ruleForm2.permissions" placeholder="请选择权限类型" :disabled="permissions">
             <el-option label="作者" value="auth"></el-option>
             <el-option label="管理员" value="admin"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="邮箱">
-          <el-input type="text" v-model="ruleForm2.email" auto-complete="off"></el-input>
+          <el-input type="text" v-model="ruleForm2.email" auto-complete="off" :disabled="permissions"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
-          <el-radio-group v-model="ruleForm2.sex">
+          <el-radio-group v-model="ruleForm2.sex" :disabled="permissions">
             <el-radio label="1">男</el-radio>
             <el-radio label="0">女</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="年龄" prop="age">
-          <el-input v-model.number="ruleForm2.age"></el-input>
+          <el-input v-model.number="ruleForm2.age" :disabled="permissions"></el-input>
         </el-form-item>
         <el-form-item label="个性签名">
-          <el-input type="textarea" v-model="ruleForm2.signature" auto-complete="off"></el-input>
+          <el-input type="textarea" v-model="ruleForm2.signature" auto-complete="off"
+                    :disabled="permissions"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm2')" :loading="btnStatus.info">{{btnStatus.text}}
+          <el-button type="primary" @click="submitForm('ruleForm2')" :disabled="permissions" :loading="btnStatus.info">
+            {{btnStatus.text}}
           </el-button>
-          <el-button @click="resetForm('ruleForm2')">重置</el-button>
+          <el-button @click="resetForm('ruleForm2')" :disabled="permissions">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -122,7 +124,8 @@
         btnStatus: {
           info: false,
           text: '提交'
-        }
+        },
+        permissions: true
       }
     },
     methods: {
@@ -155,6 +158,7 @@
                 });
               }
             }).catch(function (err) {
+              that.$message({message: '登录异常，请联系管理员！', type: 'error'});
               console.log(err)
             });
           } else {
@@ -175,6 +179,28 @@
       BreadCrumb
     },
     mounted() {
+      this.$http({
+        url: '/authPermission',
+        params: {
+          name: this.cookie.getCookie('user')
+        }
+      }).then(data => {
+        if (data.data.isAuth == 'auth') {
+          this.permissions = false;
+        } else {
+          this.$notify({
+            title: '警告',
+            message: '拥有最高权限才能添加管理员！',
+            type: 'error'
+          });
+        }
+      }).catch(err => {
+        this.$notify({
+          title: '警告',
+          message: '拥有最高权限才能添加管理员！',
+          type: 'error'
+        });
+      })
     }
   }
 </script>

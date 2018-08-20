@@ -21,9 +21,14 @@
     </div>
     <div class="admin_list">
       <template v-if="tableData.length>0">
-        <el-table :data="tableData" stripe style="width: 100%">
+        <el-table :data="tableData" stripe style="width: 100%" stripe :row-key='tableData.id' fit>
           <el-table-column type="index" width="50"></el-table-column>
-          <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="showText">
+            <template slot-scope="scope">
+              <i class="el-icon-time"></i>
+              <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="name" label="管理员"></el-table-column>
           <el-table-column prop="sex" label="性别"></el-table-column>
           <el-table-column prop="age" label="年龄"></el-table-column>
@@ -64,7 +69,6 @@
       return {
         tableData: [],
         showText: true,
-        username: '',
         userphone: '',
         timeout: null,
         timeout1: null,
@@ -75,7 +79,6 @@
       BreadCrumb
     },
     mounted() {
-      this.$store.commit('isLogin');
       this.getAdminInterface();
     },
     methods: {

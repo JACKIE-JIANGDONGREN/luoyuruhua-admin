@@ -215,6 +215,7 @@
                 });
               }
             }).catch(function (err) {
+              that.$message({message: '登录异常，请联系管理员！', type: 'error'});
               console.log(err)
             });
           } else {
