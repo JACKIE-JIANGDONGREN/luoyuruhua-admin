@@ -175,8 +175,7 @@
           }
         }).then((data) => {
           if (data.data.isAuth == 'auth') {
-            alert('允许编辑任何msg')
-            /*this.$router.push({name: isAuth, params: {id: id}})*/
+            this.$router.push({name: 'EditUser', params: {id: id}})
           } else {
             this.$notify({
               title: '警告',

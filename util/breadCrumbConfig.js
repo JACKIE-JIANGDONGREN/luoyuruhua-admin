@@ -161,5 +161,18 @@ export default [
         path: ''
       }
     ]
+  },
+  {
+    name: 'EditUser',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/index'
+      },
+      {
+        title: '编辑用户',
+        path: ''
+      }
+    ]
   }
 ]

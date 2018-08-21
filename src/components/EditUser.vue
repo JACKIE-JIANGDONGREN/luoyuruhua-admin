@@ -5,18 +5,14 @@
       <div class="add_admin_con">
         <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px"
                  class="demo-ruleForm">
-          <el-form-item label="管理员名称" prop="name">
+          <el-form-item label="用户名" prop="name">
             <el-input type="text" v-model="ruleForm2.name" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model="ruleForm2.password" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="手机号" prop="phone">
             <el-input type="text" v-model="ruleForm2.phone" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="所属权限">
-            <el-select v-model="ruleForm2.permissions" placeholder="请选择权限类型"
-                       :disabled="disabled">
-              <el-option label="作者" value="auth"></el-option>
-              <el-option label="管理员" value="admin"></el-option>
-            </el-select>
           </el-form-item>
           <el-form-item label="邮箱">
             <el-input type="text" v-model="ruleForm2.email" auto-complete="off"></el-input>
@@ -58,71 +54,48 @@
   import BreadCrumb from './public/BreadCrumb';
 
   export default {
-    name: 'AdminDetail',
+    name: 'EditUser',
     data() {
       var validateUserName = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请输入管理员名称'));
+          callback(new Error('请输入用户名'));
         } else {
           callback();
         }
       };
-      var validateUserPhone = (rule, value, callback) => {
+      var validatePass = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请输入手机号'));
-        } else if (!(/^1(3|4|5|7|8)\d{9}$/.test(this.ruleForm2.phone))) {
-          callback(new Error('手机号有误，请重新输入'));
+          callback(new Error('请输入密码'));
         } else {
-          callback();
-        }
-      };
-      var checkAge = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('年龄不能为空'));
-        }
-        setTimeout(() => {
-          if (!Number.isInteger(value)) {
-            callback(new Error('请输入数字值'));
+          if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[A-Za-z_][A-Za-z_0-9]{6,18}$/.test(this.ruleForm2.password)) {
+            callback(new Error('密码为6-18位，包含字母、数字或下划线，不能以数字开头'));
           } else {
-            if (value < 18) {
-              callback(new Error('必须年满18岁'));
-            } else {
-              callback();
-            }
+            callback();
           }
-        }, 1000);
+        }
       };
       return {
         ruleForm2: {
-          name: '周宏宇',
+          name: '',
           phone: '',
+          password: '',
           email: '',
           age: '',
           sex: '',
-          signature: '',
-          imgUrl: '',
-          userId: '',
-          permissions: ''
+          signature: ''
         },
         rules2: {
           name: [
             {validator: validateUserName, trigger: 'blur', required: true}
           ],
-          phone: [
-            {validator: validateUserPhone, trigger: 'blur', required: true}
-          ],
-          age: [
-            {validator: checkAge, trigger: 'blur'}
-          ],
-          sex: [
-            {required: true, message: '请选择您的性别', trigger: 'change'}
+          password: [
+            {validator: validatePass, trigger: 'blur', required: true}
           ]
         },
         btnStatus: {
           info: false,
           text: '提交'
-        },
-        disabled: true
+        }
       }
     },
     components: {
@@ -235,43 +208,28 @@
       }
     },
     mounted() {
+      console.log(this.$route.params.id)
       this.$http({
         method: 'get',
-        url: '/adminDetail',
+        url: '/userDetail',
         params: {
           id: this.$route.params.id
         }
       }).then(res => {
-        let data = res.data.data;
+        let data = res.data.Data;
+        console.log(res.data)
         this.ruleForm2.imgUrl = data.userImg;
         this.ruleForm2.name = data.name;
+        this.ruleForm2.password = data.password;
         this.ruleForm2.phone = data.phone;
         this.ruleForm2.sex = data.sex;
         this.ruleForm2.email = data.email;
         this.ruleForm2.age = data.age;
         this.ruleForm2.userId = data.id;
-        this.ruleForm2.permissions = data.permissions;
-        if (data.signature == '' || !data.signature) {
-          this.ruleForm2.signature = '';
-        } else {
-          this.ruleForm2.signature = data.signature;
-        }
+        this.ruleForm2.signature = data.signature;
       }).catch(function (err) {
         console.log(err)
       });
-      this.$http({
-        url: '/authPermission',
-        params: {
-          name: this.cookie.getCookie('user')
-        }
-      }).then(data => {
-        if (data.data.isAuth == 'auth') {
-          this.disabled = false;
-        }
-      }).catch(err => {
-        that.$message({message: '获取权限异常，请联系管理员！', type: 'error'});
-        console.log(err)
-      })
     }
   }
 </script>

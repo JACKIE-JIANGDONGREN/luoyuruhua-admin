@@ -89,34 +89,40 @@
     },
     methods: {
       submitForm(formName) {
-        let that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            that.btnStatus = {info: true, text: '提交中'};
+            this.btnStatus = {info: true, text: '提交中'};
             this.$http({
               method: 'post',
               url: '/addUser',
-              data: that.ruleForm2
-            }).then(function (res) {
+              data: this.ruleForm2
+            }).then(res => {
               if (res.data.msg == '1') {
-                that.btnStatus = {info: false, text: '提交'};
-                that.$notify({
+                this.btnStatus = {info: false, text: '提交'};
+                this.$notify({
                   title: '成功',
                   message: res.data.des,
                   type: 'success'
                 });
-                setTimeout(function () {
-                  that.$router.push({name: 'UserMain'});
+                setTimeout(() => {
+                  this.$router.push({name: 'UserMain'});
                 }, 1000);
+              } else {
+                this.btnStatus = {info: false, text: '提交'};
+                this.$notify({
+                  title: '警告',
+                  message: res.data.des,
+                  type: 'error'
+                });
               }
-            }).catch(function (err) {
-              that.$message({message: '登录异常，请联系管理员！', type: 'error'});
+            }).catch(err => {
+              this.$message({message: '请求异常，请联系管理员！', type: 'error'});
               console.log(err)
             });
           } else {
-            that.$notify({
+            this.$notify({
               title: '警告',
-              message: '请输入要添加的管理员信息',
+              message: '请按需求填入用户信息！',
               type: 'error'
             });
             return false;
@@ -147,7 +153,7 @@
           });
         }
       }).catch(err => {
-        that.$message({message: '获取权限失败，请联系管理员！', type: 'error'});
+        this.$message({message: '获取权限失败，请联系管理员！', type: 'error'});
         console.log(err)
       })
     }
