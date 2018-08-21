@@ -12,7 +12,8 @@
             <el-input type="text" v-model="ruleForm2.phone" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="所属权限">
-            <el-select v-model="ruleForm2.permissions" placeholder="请选择权限类型">
+            <el-select v-model="ruleForm2.permissions" placeholder="请选择权限类型"
+                       :disabled="disabled">
               <el-option label="作者" value="auth"></el-option>
               <el-option label="管理员" value="admin"></el-option>
             </el-select>
@@ -120,7 +121,8 @@
         btnStatus: {
           info: false,
           text: '提交'
-        }
+        },
+        disabled: true
       }
     },
     components: {
@@ -257,6 +259,19 @@
       }).catch(function (err) {
         console.log(err)
       });
+      this.$http({
+        url: '/authPermission',
+        params: {
+          name: this.cookie.getCookie('user')
+        }
+      }).then(data => {
+        if (data.data.isAuth == 'auth') {
+          this.disabled = false;
+        }
+      }).catch(err => {
+        that.$message({message: '登录异常，请联系管理员！', type: 'error'});
+        console.log(err)
+      })
     }
   }
 </script>

@@ -147,11 +147,8 @@
           });
         }
       }).catch(err => {
-        this.$notify({
-          title: '警告',
-          message: '拥有最高权限才能添加用户！',
-          type: 'error'
-        });
+        that.$message({message: '获取权限失败，请联系管理员！', type: 'error'});
+        console.log(err)
       })
     }
   }

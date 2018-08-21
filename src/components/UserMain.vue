@@ -22,6 +22,7 @@
     <div class="admin_list">
       <template v-if="tableData.length>0">
         <el-table :data="tableData" stripe style="width: 100%" @selection-change="selectionChange" stripe
+                  v-loading="loading"
                   :row-key='tableData.id' fit highlight-current-row>
           <el-table-column type="selection" width="55" align="center"></el-table-column>
           <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="showText">
@@ -60,10 +61,10 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[5, 25, 35, 50]"
+          :page-sizes="[15, 25, 35, 50]"
           :page-size="100"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400">
+          :total="totalCount">
         </el-pagination>
       </div>
     </div>
@@ -84,7 +85,10 @@
         timeout: null,
         timeout1: null,
         noData: '',
-        currentPage: 1
+        currentPage: 1,
+        totalCount: 0,
+        showCount: 15,
+        loading: true
       }
     },
     components: {
@@ -100,7 +104,9 @@
           method: 'get',
           url: '/allUser',
           params: {
-            name: that.name
+            name: that.name,
+            currentPage: this.currentPage,
+            showCount: this.showCount
           }
         }).then(function (res) {
           that.getAdminData(res);
@@ -110,6 +116,7 @@
       },
       getAdminData(data) {
         let resData = data.data.Datas;
+        this.totalCount = data.data.count;
         if (resData.length > 0) {
           for (var i = 0; i < resData.length; i++) {
             if (!resData[i].signature || resData[i].signature == '') {
@@ -136,8 +143,10 @@
             }
           }
           this.tableData = resData;
+          this.loading = false;
         } else {
           this.tableData = [];
+          this.loading = false;
           this.noData = '没有找到合适的资源';
         }
       },
@@ -158,28 +167,22 @@
         this.name = item.name;
       },
       linkToEdit(id) {
-        this.linkTo(id, 'EditAdmin');
-      },
-      linkTo(id, isAuth) {
         this.$http({
           method: 'get',
-          url: '/adminDetail',
+          url: '/authPermission',
           params: {
-            id: this.$store.state.userId
+            name: this.cookie.getCookie('user')
           }
         }).then((data) => {
-          if (data.data.data.permissions == 'auth') {
-            this.$router.push({name: isAuth, params: {id: id}})
+          if (data.data.isAuth == 'auth') {
+            alert('允许编辑任何msg')
+            /*this.$router.push({name: isAuth, params: {id: id}})*/
           } else {
-            if (id == this.$store.state.userId) {
-              this.$router.push({name: isAuth, params: {id: id}})
-            } else {
-              this.$notify({
-                title: '警告',
-                message: '权限不足，无法编辑其他管理员信息！',
-                type: 'warning'
-              });
-            }
+            this.$notify({
+              title: '警告',
+              message: '权限不足，无法编辑用户信息！',
+              type: 'warning'
+            });
           }
         }).catch((err) => {
           this.$message({message: '登录异常，请联系管理员！', type: 'error'});
@@ -195,10 +198,12 @@
         console.log(this.groupOprate.ids)*/
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.showCount = val;
+        this.getAdminInterface();
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.currentPage = val;
+        this.getAdminInterface();
       }
     }
   }
@@ -243,6 +248,6 @@
 
   .pagination {
     float: right;
-    padding: 20px 50px;
+    padding: 50px 50px 40px;
   }
 </style>
