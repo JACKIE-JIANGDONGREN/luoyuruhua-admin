@@ -47,7 +47,7 @@
           <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="linkToEdit(scope.row.id)">编辑</el-button>
-              <el-button type="text" size="small">移除</el-button>
+              <el-button type="text" size="small" @click="delUser(scope.row.id)">移除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -184,17 +184,12 @@
             });
           }
         }).catch((err) => {
-          this.$message({message: '登录异常，请联系管理员！', type: 'error'});
+          this.$message({message: '获取权限异常，请联系管理员！', type: 'error'});
           console.log(err)
         })
       },
       selectionChange(selection) {
         console.log(selection)
-        /*this.groupOprate.ids = []
-        for (let i = 0; i < selection.length; i++) {
-          this.groupOprate.ids.push(selection[i].id)
-        }
-        console.log(this.groupOprate.ids)*/
       },
       handleSizeChange(val) {
         this.showCount = val;
@@ -203,6 +198,56 @@
       handleCurrentChange(val) {
         this.currentPage = val;
         this.getAdminInterface();
+      },
+      delUser(id) {
+        this.$http({
+          method: 'get',
+          url: '/authPermission',
+          params: {
+            name: this.cookie.getCookie('user')
+          }
+        }).then((data) => {
+          if (data.data.isAuth == 'auth') {
+            this.delUserFun(id);
+          } else {
+            this.$notify({
+              title: '警告',
+              message: '权限不足，无法进行相应操作！',
+              type: 'warning'
+            });
+          }
+        }).catch((err) => {
+          this.$message({message: '获取权限异常，请联系管理员！', type: 'error'});
+          console.log(err)
+        })
+      },
+      delUserFun(userId) {
+        this.$confirm('确认是否要删除该用户', '删除用户', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '确认',
+          cancelButtonText: '取消'
+        }).then(() => {
+          this.$http({
+            method: 'delete',
+            url: '/delUser',
+            data: {
+              id: userId
+            }
+          }).then((data) => {
+            if (data.data.msg == '1') {
+              this.$message({title: '成功', message: data.data.des, type: 'success'});
+              this.getAdminInterface();
+            }
+          }).catch((err) => {
+            this.$message({title: '失败', message: '删除用户失败，请联系管理员！', type: 'error'});
+            console.log(err)
+          })
+        }).catch(action => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        });
       }
     }
   }
@@ -211,6 +256,7 @@
 <style scoped>
   .my-scroll-bar {
     height: 100%;
+    overflow: auto;
   }
 
   .public_nav {

@@ -107,6 +107,7 @@
         let imgLimit = 1024;
         let files = e.target.files;
         let image = new Image();
+        let base64 = '';
         if (files.length > 0) {
           let dd = 0;
           let timer = setInterval(function () {
@@ -144,12 +145,12 @@
                 canvas.setAttributeNode(anh);
                 ctx.drawImage(image, 0, 0, w, h);
                 let ext = image.src.substring(image.src.lastIndexOf(".") + 1).toLowerCase();//图片格式
-                let base64 = canvas.toDataURL("image/" + ext, quality);
+                base64 = canvas.toDataURL("image/" + ext, quality);
                 _this.ruleForm2.imgUrl = base64;
                 _this.url = '';
+                console.log(_this.ruleForm2.imgUrl)
               }
             }
-
             if (dd < files.length - 1) {
               dd++;
             } else {
@@ -162,41 +163,15 @@
         let that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            that.btnStatus = {info: true, text: '提交中'};
-            this.$http({
-              method: 'put',
-              url: '/editAdmin',
-              data: that.ruleForm2
-            }).then(function (res) {
-              if (res.data.msg == '1') {
-                that.btnStatus = {info: false, text: '提交'};
-                that.$notify({
-                  title: '成功',
-                  message: res.data.des,
-                  type: 'success'
-                });
-                that.$store.state.userPassword = '';
-                that.$store.state.userName = '';
-                that.$store.state.userId = '';
-                setTimeout(function () {
-                  that.$router.push({name: 'Login'});
-                }, 1000);
-              } else {
-                that.btnStatus = {info: false, text: '提交'};
-                that.$notify({
-                  title: '警告',
-                  message: res.data.des,
-                  type: 'error'
-                });
-              }
-            }).catch(function (err) {
-              that.$message({message: '登录异常，请联系管理员！', type: 'error'});
-              console.log(err)
+            that.$notify({
+              title: '警告',
+              message: '待开发！',
+              type: 'error'
             });
           } else {
             that.$notify({
               title: '警告',
-              message: '请输入要添加的管理员信息',
+              message: '请完善所需要的用户信息！',
               type: 'error'
             });
             return false;
@@ -207,8 +182,7 @@
         this.$refs[formName].resetFields();
       }
     },
-    mounted() {
-      console.log(this.$route.params.id)
+    created() {
       this.$http({
         method: 'get',
         url: '/userDetail',
@@ -217,7 +191,6 @@
         }
       }).then(res => {
         let data = res.data.Data;
-        console.log(res.data)
         this.ruleForm2.imgUrl = data.userImg;
         this.ruleForm2.name = data.name;
         this.ruleForm2.password = data.password;
@@ -227,7 +200,8 @@
         this.ruleForm2.age = data.age;
         this.ruleForm2.userId = data.id;
         this.ruleForm2.signature = data.signature;
-      }).catch(function (err) {
+      }).catch(err => {
+        this.$message({message: '获取详情失败，请联系管理员！', type: 'error'});
         console.log(err)
       });
     }

@@ -45,7 +45,7 @@ export default new Router({
           component: resove => require(['../components/AddAdmin'], resove),
           meta: {
             title: '落雨如画后台管理平台-添加管理员',
-            keepAlive: true
+            keepAlive: false
           }
         },
         {
@@ -54,7 +54,7 @@ export default new Router({
           component: resove => require(['../components/ChangeAdminPsw'], resove),
           meta: {
             title: '落雨如画后台管理平台-修改密码',
-            keepAlive: true
+            keepAlive: false
           }
         },
         {
@@ -72,7 +72,7 @@ export default new Router({
           component: resove => require(['../components/AddUser'], resove),
           meta: {
             title: '落雨如画后台管理平台-添加用户',
-            keepAlive: true
+            keepAlive: false
           }
         },
         {
