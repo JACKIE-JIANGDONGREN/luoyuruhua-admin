@@ -53,6 +53,7 @@
         </el-form-item>
       </el-form>
       <button @click="getUEContent()">获取内容</button>
+      <div v-html="form.content" class="set_style"></div>
     </div>
   </GeminiScrollbar>
 </template>
@@ -78,7 +79,8 @@
           title: '',
           category: '',
           tag: [],
-          thumbImg: ''
+          thumbImg: '',
+          content: ''
         }
       }
     },
@@ -86,6 +88,7 @@
       getUEContent() {
         let content = this.$refs.ue.getUEContent();
         console.log(content)
+        this.form.content = content;
       },
       onSubmit() {
         console.log('submit!');
@@ -148,7 +151,7 @@
             }
           }, 1000)
         }
-      }
+      },
     },
     mounted() {
     }
@@ -179,7 +182,6 @@
   }
 
   .filter {
-    /*opacity: ;*/
     position: absolute;
     width: 65px;
     height: 35px;
@@ -189,9 +191,6 @@
     display: inline-block;
     line-height: 35px;
     white-space: nowrap;
-    cursor: pointer;
-    -webkit-cursor: pointer;
-    background: #fff;
     border: 1px solid #dcdfe6;
     border-color: #dcdfe6;
     color: #fff;
@@ -199,12 +198,10 @@
     box-sizing: border-box;
     outline: none;
     margin: 0;
-    transition: .1s;
     font-weight: 500;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    /*padding: 12px 20px;*/
     font-size: 14px;
     border-radius: 4px;
     background-color: #409eff;
@@ -218,11 +215,18 @@
     position: absolute;
     left: 0;
     top: 0;
+    cursor: pointer;
+    -webkit-cursor: pointer;
   }
 
   #show_upload > img {
     display: block;
     width: 100%;
     height: 100%;
+  }
+
+  .set_style >>> p {
+    letter-spacing: 20px;
+    color: #f00;
   }
 </style>
