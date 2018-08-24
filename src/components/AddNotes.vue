@@ -2,20 +2,20 @@
   <GeminiScrollbar>
     <bread-crumb></bread-crumb>
     <div class="add_notes">
-      <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="随笔标题">
+      <el-form ref="form" :rules="rules" :model="form" label-width="100px">
+        <el-form-item label="随笔标题" prop="title" style="width: 500px;">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
-        <el-form-item label="随笔分类">
-          <el-select v-model="form.category" placeholder="请选择类别">
-            <el-option label="css" value="0"></el-option>
-            <el-option label="javascript" value="1"></el-option>
-            <el-option label="jquery" value="2"></el-option>
-            <el-option label="vue" value="3"></el-option>
-            <el-option label="nodeJS" value="4"></el-option>
-            <el-option label="移动端" value="5"></el-option>
-            <el-option label="微信小程序" value="6"></el-option>
-            <el-option label="其他" value="7"></el-option>
+        <el-form-item label="随笔分类" prop="category">
+          <el-select v-model="form.category" placeholder="请选择类别" @change="selectCategory($event)">
+            <el-option label="css" value="css"></el-option>
+            <el-option label="javascript" value="javascript"></el-option>
+            <el-option label="jquery" value="jquery"></el-option>
+            <el-option label="vue" value="vue"></el-option>
+            <el-option label="nodeJS" value="nodeJS"></el-option>
+            <el-option label="移动端" value="移动端"></el-option>
+            <el-option label="微信小程序" value="微信小程序"></el-option>
+            <el-option label="其他" value="其他"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="自定义标签">
@@ -24,7 +24,9 @@
                      filterable
                      allow-create
                      default-first-option
-                     placeholder="请选择文章标签">
+                     placeholder="请选择文章标签"
+                     @change="selectTag($event)"
+          >
             <el-option label="css" value="css"></el-option>
             <el-option label="javascript" value="javascript"></el-option>
             <el-option label="jquery" value="jquery"></el-option>
@@ -33,7 +35,10 @@
         <el-form-item label="缩略图">
           <div class="com-upload-img">
             <div class="img_group">
-              <div class="img_box" id="show_upload">
+              <div class="img_box" id="show_upload" v-loading="loading"
+                   element-loading-text="上传中"
+                   element-loading-spinner="el-icon-loading"
+                   element-loading-background="rgba(0, 0, 0, 0.8)">
                 <img :src=form.thumbImg alt="">
                 <div class="filter">
                   上传
@@ -48,12 +53,10 @@
           <UE :defaultMsg=defaultMsg :config=config ref="ue"></UE>
         </div>
         <el-form-item align="left" class="notes_btm">
-          <el-button type="primary" @click="onSubmit">立即创建</el-button>
+          <el-button type="primary" @click="submitForm('form')">立即创建</el-button>
           <el-button @click="cancel()">取消</el-button>
         </el-form-item>
       </el-form>
-      <button @click="getUEContent()">获取内容</button>
-      <div v-html="form.content" class="set_style"></div>
     </div>
   </GeminiScrollbar>
 </template>
@@ -70,28 +73,43 @@
     data() {
       return {
         defaultMsg: '这里是UE测试',
+        loading: false,
         config: {
           initialFrameWidth: 1200,
           initialFrameHeight: 800,
-          autoFloatEnabled: true
+          autoFloatEnabled: false
         },
         form: {
           title: '',
           category: '',
           tag: [],
-          thumbImg: '',
+          thumbImg: require('../assets/public/noimg.gif'),
           content: ''
+        },
+        rules: {
+          title: [
+            {required: true, message: '请输入随笔标题', trigger: 'blur'}
+          ],
+          category: [
+            {required: true, message: '请选择随笔类别', trigger: 'change'}
+          ]
         }
       }
     },
     methods: {
-      getUEContent() {
-        let content = this.$refs.ue.getUEContent();
-        console.log(content)
-        this.form.content = content;
-      },
-      onSubmit() {
-        console.log('submit!');
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.addNotes();
+          } else {
+            this.$notify({
+              title: '警告',
+              message: '请完善所需要的信息！',
+              type: 'warning'
+            });
+            return false;
+          }
+        });
       },
       cancel() {
         this.$router.push({name: 'NotesMain'})
@@ -116,16 +134,15 @@
               });
               //to do sth
             } else {
+              _this.loading = true;
               image.src = window.URL.createObjectURL(files.item(dd));
               image.onload = function () {
                 // 默认按比例压缩
-                let w = 100,
-                  h = 100,
+                let w = image.width,
+                  h = image.height,
                   scale = w / h;
-                w = 120;
-                h = w / scale;
                 // 默认图片质量为0.7，quality值越小，所绘制出的图像越模糊
-                let quality = 0.7;
+                let quality = 0.8;
                 //生成canvas
                 let canvas = document.createElement('canvas');
                 let ctx = canvas.getContext('2d');
@@ -139,7 +156,7 @@
                 ctx.drawImage(image, 0, 0, w, h);
                 let ext = image.src.substring(image.src.lastIndexOf(".") + 1).toLowerCase();//图片格式
                 let base64 = canvas.toDataURL("image/" + ext, quality);
-                _this.form.thumbImg = base64;
+                _this.uploadThumbImg(base64);
                 _this.url = '';
               }
             }
@@ -152,6 +169,59 @@
           }, 1000)
         }
       },
+      uploadThumbImg(baseData) {
+        this.$http({
+          method: 'post',
+          url: '/addthumbImg',
+          data: {
+            thumbImg: baseData
+          }
+        }).then(data => {
+          this.$message({
+            message: '上传成功',
+            type: 'success'
+          });
+          this.loading = false;
+          this.form.thumbImg = data.data.thumbImg;
+        }).catch(err => {
+          this.loading = false;
+          this.$message.error('上传失败，请联系管理员！');
+          console.log(err)
+        })
+      },
+      selectTag(val) {
+        this.form.tag = val;
+      },
+      selectCategory(val) {
+        this.form.category = val;
+        console.log(val)
+      },
+      addNotes() {
+        this.form.content = this.$refs.ue.getUEContent();
+        this.$http({
+          method: 'post',
+          url: '/addNotes',
+          data: {
+            name: this.cookie.getCookie('user'),
+            form: this.form
+          }
+        }).then(data => {
+          if (data.data.code == '200') {
+            this.$notify({
+              title: '成功',
+              message: '添加成功',
+              type: 'success'
+            });
+            this.$router.push({name: 'NotesMain'})
+          }
+        }).catch(err => {
+          this.$notify.error({
+            title: '错误',
+            message: '请联系管理员'
+          });
+          console.log(err)
+        })
+      }
     },
     mounted() {
     }
@@ -223,10 +293,5 @@
     display: block;
     width: 100%;
     height: 100%;
-  }
-
-  .set_style >>> p {
-    letter-spacing: 20px;
-    color: #f00;
   }
 </style>

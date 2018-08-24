@@ -90,7 +90,7 @@ export default new Router({
           component: resove => require(['../components/AddNotes'], resove),
           meta: {
             title: '落雨如画后台管理平台-添加随笔',
-            keepAlive: true
+            keepAlive: false
           }
         },
         {

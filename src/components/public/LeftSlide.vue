@@ -2,7 +2,8 @@
   <div class="main_left">
     <div class="main_left_logo" style="text-align: center;">
       <router-link :to="{name:'Index'}" tag="p" v-if="$store.state.spreadInfo">lyrh</router-link>
-      <router-link :to="{name:'Index'}" tag="p" v-else>lyrh博客</router-link>
+      <!--<router-link :to="{name:'Index'}" tag="p" v-else>lyrh博客</router-link>-->
+      <router-link :to="{name:'Index'}" tag="p" v-else><img src="../../assets/logo.png" alt=""></router-link>
     </div>
     <el-menu router :default-active="$route.path" unique-opened background-color="#545c64" class="el-menu-vertical-demo"
              :collapse="$store.state.spreadInfo"
@@ -132,5 +133,13 @@
     color: #fff;
     cursor: pointer;
     font-size: 20px;
+    text-align: center;
+  }
+
+  .main_left_logo p img {
+    display: inline-block;
+    width: 43%;
+    height: auto;
+    vertical-align: middle;
   }
 </style>
