@@ -1,8 +1,9 @@
 <template>
-  <GeminiScrollbar class="my-scroll-bar">
+  <gemini-scrollbar class="my-scroll-bar">
     <bread-crumb></bread-crumb>
     <div class="find_admin">
       <el-autocomplete
+        style="margin-left: 20px;"
         popper-class="my-autocomplete"
         v-model="name"
         :fetch-suggestions="querySearchAsync"
@@ -68,7 +69,7 @@
         </el-pagination>
       </div>
     </div>
-  </GeminiScrollbar>
+  </gemini-scrollbar>
 </template>
 
 <script>

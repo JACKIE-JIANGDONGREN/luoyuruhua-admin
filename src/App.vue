@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive>
-      <router-view/>
-    </keep-alive>
+    <router-view/>
   </div>
 </template>
 
@@ -16,7 +14,6 @@
   html, body {
     width: 100%;
     height: 100%;
-    font-family: '微软雅黑';
   }
 
   #app {

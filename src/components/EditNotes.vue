@@ -1,5 +1,5 @@
 <template>
-  <GeminiScrollbar>
+  <gemini-scrollbar>
     <bread-crumb></bread-crumb>
     <div class="add_notes">
       <el-form ref="form" :rules="rules" :model="form" label-width="100px">
@@ -53,12 +53,12 @@
           <UE :defaultMsg=form.content :config=config ref="ue"></UE>
         </div>
         <el-form-item align="left" class="notes_btm">
-          <el-button type="primary" @click="submitForm('form')">立即创建</el-button>
+          <el-button type="primary" @click="submitForm('form')">确定</el-button>
           <el-button @click="cancel()">取消</el-button>
         </el-form-item>
       </el-form>
     </div>
-  </GeminiScrollbar>
+  </gemini-scrollbar>
 </template>
 
 <script>
@@ -66,7 +66,7 @@
   import UE from './public/UE';
 
   export default {
-    name: "AddNotes",
+    name: "EditNotes",
     components: {
       BreadCrumb, UE
     },
@@ -78,13 +78,7 @@
           initialFrameHeight: 800,
           autoFloatEnabled: false
         },
-        form: {
-          title: '',
-          category: '',
-          tag: [],
-          thumbImg: require('../assets/public/noimg.gif'),
-          content: '请编写您的随笔 . . .'
-        },
+        form: {},
         rules: {
           title: [
             {required: true, message: '请输入随笔标题', trigger: 'blur'}
@@ -99,7 +93,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.addNotes();
+            this.editNotes();
           } else {
             this.$notify({
               title: '警告',
@@ -194,20 +188,20 @@
       selectCategory(val) {
         this.form.category = val;
       },
-      addNotes() {
+      editNotes() {
         this.form.content = this.$refs.ue.getUEContent();
         this.$http({
-          method: 'post',
-          url: '/addNotes',
+          method: 'put',
+          url: '/editNotes',
           data: {
-            name: this.cookie.getCookie('user'),
+            id: this.$route.params.id,
             form: this.form
           }
         }).then(data => {
           if (data.data.code == '200') {
             this.$notify({
               title: '成功',
-              message: '添加成功',
+              message: data.data.des,
               type: 'success'
             });
             this.$router.push({name: 'NotesMain'})
@@ -215,13 +209,26 @@
         }).catch(err => {
           this.$notify.error({
             title: '错误',
-            message: '请联系管理员'
+            message: '更新随笔失败，请联系管理员'
           });
           console.log(err)
         })
       }
     },
     mounted() {
+      this.$http({
+        method: 'get',
+        url: '/findNotes',
+        params: {id: this.$route.params.id}
+      }).then(data => {
+        this.form = data.data.Datas;
+      }).catch(err => {
+        this.$notify.error({
+          title: '错误',
+          message: '请联系管理员'
+        });
+        console.log(err)
+      })
     }
   }
 </script>

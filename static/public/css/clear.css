@@ -3,7 +3,7 @@
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-html, body, ul, ol, p, div, table, tr, td, th, select, form,button, h1, h2, h3, h4, h5, h6 {
+html, body, ul, ol, p, div, table, tr, td, th, select, form, button, h1, h2, h3, h4, h5, h6 {
   padding: 0;
   margin: 0;
   font-family: '微软雅黑';
@@ -55,5 +55,5 @@ video::-webkit-media-controls-start-playback-button {
 
 html, body {
   width: 100%;
-  height: auto;
+  height: 100%;
 }

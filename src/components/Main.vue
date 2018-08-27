@@ -3,10 +3,7 @@
     <left-slide></left-slide>
     <div class="main_right" :class="$store.state.spreadInfo?'margin_left_default':'margin_left_spread'">
       <right-slide-top></right-slide-top>
-      <keep-alive>
-        <router-view v-if="$route.meta.keepAlive"></router-view>
-      </keep-alive>
-      <router-view v-if="!$route.meta.keepAlive"></router-view>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -37,6 +34,7 @@
     width: 100%;
     height: 100%;
     background: rgb(84, 92, 100);
+
   }
 
   .el-menu-vertical-demo:not(.el-menu--collapse) {
