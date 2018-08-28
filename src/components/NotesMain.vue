@@ -31,7 +31,7 @@
           <span class="name">{{ item.title }}</span>
         </template>
       </el-autocomplete>
-      <el-button type="primary" icon="el-icon-search" size="small" @click="getAdminInterface()">搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" size="small" @click="getNotesInterface()">搜索</el-button>
     </div>
     <div class="admin_list">
       <template v-if="tableData.length>0">
@@ -72,7 +72,7 @@
           <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="linkToEdit(scope.row._id)">编辑</el-button>
-              <el-button type="text" size="small" @click="delUser(scope.row._id)">移除</el-button>
+              <el-button type="text" size="small" @click="delNotes(scope.row._id,scope.row.author._id)">移除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -148,10 +148,10 @@
       BreadCrumb
     },
     mounted() {
-      this.getAdminInterface();
+      this.getNotesInterface();
     },
     methods: {
-      getAdminInterface() {
+      getNotesInterface() {
         this.$http({
           method: 'get',
           url: '/allNotes',
@@ -228,13 +228,13 @@
       },
       handleSizeChange(val) {
         this.showCount = val;
-        this.getAdminInterface();
+        this.getNotesInterface();
       },
       handleCurrentChange(val) {
         this.currentPage = val;
-        this.getAdminInterface();
+        this.getNotesInterface();
       },
-      delUser(id) {
+      delNotes(id, authorId) {
         this.$http({
           method: 'get',
           url: '/authPermission',
@@ -243,7 +243,7 @@
           }
         }).then((data) => {
           if (data.data.isAuth == 'auth') {
-            this.delUserFun(id);
+            this.delNotesFun(id, authorId);
           } else {
             this.$notify({
               title: '警告',
@@ -256,7 +256,7 @@
           console.log(err)
         })
       },
-      delUserFun(userId) {
+      delNotesFun(notesId, id) {
         this.$confirm('确认是否要删除该用户', '删除用户', {
           distinguishCancelAndClose: true,
           confirmButtonText: '确认',
@@ -264,17 +264,18 @@
         }).then(() => {
           this.$http({
             method: 'delete',
-            url: '/delUser',
+            url: '/delNotes',
             data: {
-              id: userId
+              id: id,
+              notesId: notesId
             }
           }).then((data) => {
             if (data.data.msg == '1') {
+              this.getNotesInterface();
               this.$message({title: '成功', message: data.data.des, type: 'success'});
-              this.getAdminInterface();
             }
           }).catch((err) => {
-            this.$message({title: '失败', message: '删除用户失败，请联系管理员！', type: 'error'});
+            this.$message({title: '失败', message: '删除随笔失败，请联系管理员！', type: 'error'});
             console.log(err)
           })
         }).catch(action => {

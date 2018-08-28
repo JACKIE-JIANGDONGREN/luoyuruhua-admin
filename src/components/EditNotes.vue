@@ -75,8 +75,9 @@
         loading: false,
         config: {
           initialFrameWidth: 1200,
-          initialFrameHeight: 800,
-          autoFloatEnabled: false
+          initialFrameHeight: 1200,
+          autoFloatEnabled: false,
+          scaleEnabled: true
         },
         form: {},
         rules: {

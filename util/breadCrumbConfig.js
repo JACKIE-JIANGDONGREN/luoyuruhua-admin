@@ -111,6 +111,23 @@ export default [
     ]
   },
   {
+    name: 'EditNotes',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/index'
+      },
+      {
+        title: '随笔管理',
+        path: ''
+      },
+      {
+        title: '编辑随笔',
+        path: '/index/editNotes'
+      }
+    ]
+  },
+  {
     name: 'About',
     breadcrumb: [
       {
