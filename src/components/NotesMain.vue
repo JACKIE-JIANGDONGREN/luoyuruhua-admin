@@ -54,6 +54,7 @@
               </div>
             </template>
           </el-table-column>
+          <el-table-column prop="description" label="概要" :show-overflow-tooltip="showText"></el-table-column>
           <el-table-column prop="content" label="内容" :show-overflow-tooltip="showText">
             <template slot-scope="scope">
               <div>请编辑查看</div>

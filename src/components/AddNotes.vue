@@ -48,6 +48,9 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item label="简单概要" prop="description" style="width: 500px;">
+          <el-input type="textarea" v-model="form.description" rows="6" placeholder="建议50到200字符"></el-input>
+        </el-form-item>
         <el-form-item label="随笔内容"></el-form-item>
         <div class="editor-container">
           <UE :defaultMsg=form.content :config=config ref="ue"></UE>
@@ -77,13 +80,14 @@
           initialFrameWidth: 1200,
           initialFrameHeight: 1200,
           autoFloatEnabled: false,
-          scaleEnabled:true
+          scaleEnabled: true
         },
         form: {
           title: '',
           category: '',
           tag: [],
           thumbImg: require('../assets/public/noimg.gif'),
+          description: '',
           content: '请编写您的随笔 . . .'
         },
         rules: {
@@ -92,6 +96,9 @@
           ],
           category: [
             {required: true, message: '请选择随笔类别', trigger: 'change'}
+          ],
+          description: [
+            {required: true, message: '请输入随笔概要', trigger: 'blur'}
           ]
         }
       }
@@ -126,7 +133,7 @@
               return false;
             }
 
-            if (files.item(dd).size > imgLimit * 1000) {
+            if (files.item(dd).size > imgLimit * 2000) {
               _this.$notify({
                 title: '警告',
                 message: '图片大小不得超过2MB',
