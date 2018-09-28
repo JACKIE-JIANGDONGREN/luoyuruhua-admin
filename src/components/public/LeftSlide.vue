@@ -82,6 +82,12 @@
             ]
           },
           {
+            menuName: '评论管理',
+            path: '/index/comment',
+            hasChild: false,
+            icon: 'el-icon-document'
+          },
+          {
             menuName: '关于平台',
             path: '/index/about',
             hasChild: false,

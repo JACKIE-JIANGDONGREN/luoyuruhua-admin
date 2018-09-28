@@ -18,10 +18,10 @@ import Cookie from '../util/cookieConfg';  // 配置cookie
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import '../static/ueditor/ueditor.config'
-import '../static/ueditor/ueditor.all'
-import '../static/ueditor/ueditor.parse'
-import '../static/ueditor/lang/zh-cn/zh-cn'
+import '../static/ueditor/ueditor.config';
+import '../static/ueditor/ueditor.all';
+import '../static/ueditor/ueditor.parse';
+import '../static/ueditor/lang/zh-cn/zh-cn';
 
 
 import 'public_css/clear.css';

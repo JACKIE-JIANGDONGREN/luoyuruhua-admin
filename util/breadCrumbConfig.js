@@ -191,5 +191,18 @@ export default [
         path: ''
       }
     ]
+  },
+  {
+    name: 'ReplyMain',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/index'
+      },
+      {
+        title: '评论数据管理',
+        path: '/index/comment'
+      }
+    ]
   }
 ]

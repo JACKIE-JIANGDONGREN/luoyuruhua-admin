@@ -22,7 +22,7 @@ export default new Router({
       },
       children: [
         {
-          path: '',
+          path: '/',
           name: 'Index',
           component: resove => require(['../components/Index'], resove),
           meta: {
@@ -123,6 +123,14 @@ export default new Router({
           component: resove => require(['../components/EditUser'], resove),
           meta: {
             title: '落雨如画后台管理平台-编辑用户'
+          }
+        },
+        {
+          path: 'comment',
+          name: 'ReplyMain',
+          component: resove => require(['../components/ReplyMain'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-评论管理'
           }
         }
       ]

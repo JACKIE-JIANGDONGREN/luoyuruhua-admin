@@ -102,7 +102,7 @@
   import moment from 'moment';  // use time plugs
 
   export default {
-    name: "NotesMain",
+    name: "ReplyMain",
     data() {
       return {
         tableData: [],
