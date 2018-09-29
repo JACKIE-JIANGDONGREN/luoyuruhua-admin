@@ -31,7 +31,7 @@
           <span class="name">{{ item.title }}</span>
         </template>
       </el-autocomplete>
-      <el-button type="primary" icon="el-icon-search" size="small" @click="getNotesInterface()">搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" size="small" @click="commentData()">搜索</el-button>
     </div>
     <div class="admin_list">
       <template v-if="tableData.length>0">
@@ -39,37 +39,27 @@
                   v-loading="loading"
                   :row-key='tableData.id' fit highlight-current-row>
           <el-table-column type="selection" width="55" align="center"></el-table-column>
-          <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="showText">
+          <el-table-column prop="createTime" label="评论时间" :show-overflow-tooltip="showText">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
               <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="title" label="标题"></el-table-column>
-          <el-table-column prop="category" label="分类"></el-table-column>
-          <el-table-column prop="age" label="关键词">
+          <el-table-column prop="title" label="评论者"></el-table-column>
+          <el-table-column prop="category" label="评论对象"></el-table-column>
+          <el-table-column prop="age" label="评论内容">
             <template slot-scope="scope">
               <div>
                 <span v-for="item of scope.row.tag">{{item}}&nbsp;&nbsp;</span>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="description" label="概要" :show-overflow-tooltip="showText"></el-table-column>
-          <el-table-column prop="content" label="内容" :show-overflow-tooltip="showText">
+          <el-table-column prop="description" label="评论类别" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column prop="content" label="类别标题" :show-overflow-tooltip="showText">
             <template slot-scope="scope">
               <div>请编辑查看</div>
             </template>
           </el-table-column>
-          <el-table-column prop="author.name" label="作者" :show-overflow-tooltip="showText"></el-table-column>
-          <el-table-column prop="thumbImg" label="缩略图">
-            <template slot-scope="scope">
-              <div class="user_img">
-                <img :src="scope.row.thumbImg" alt="">
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="pageView" label="浏览量" :show-overflow-tooltip="showText"></el-table-column>
-          <el-table-column prop="replyData" label="评论" :show-overflow-tooltip="showText"></el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="linkToEdit(scope.row._id)">编辑</el-button>
@@ -294,7 +284,20 @@
         });
       },
       onPick(data) {
-        this.dataRange = data
+        this.dataRange = data;
+      },
+      commentData() {
+        this.$http({
+          method: 'get',
+          url: '/getCommentData',
+          params: {
+            dataTime: this.dataRange
+          },
+        }).then((data) => {
+          console.log(data)
+        }).catch((err) => {
+          console.log(err)
+        })
       }
     }
   }
