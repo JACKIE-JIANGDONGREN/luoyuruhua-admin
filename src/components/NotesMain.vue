@@ -265,7 +265,7 @@
         })
       },
       delNotesFun(notesId, id) {
-        this.$confirm('确认是否要删除该用户', '删除用户', {
+        this.$confirm('确认是否要删除该篇文章', '删除文章', {
           distinguishCancelAndClose: true,
           confirmButtonText: '确认',
           cancelButtonText: '取消'

@@ -46,7 +46,8 @@
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="linkToEdit()">编辑</el-button>
               <el-button type="text" size="small"
-                         @click="delComment(scope.row._id,scope.row.replyData._id,scope.row.notesData._id,channelId)">移除
+                         @click="delComment(scope.row._id,scope.row.replyData._id,scope.row.notesData._id,channelId,scope.row.replyData.to._id)">
+                移除
               </el-button>
             </template>
           </el-table-column>
@@ -164,7 +165,7 @@
         this.currentPage = val;
         this.commentData();
       },
-      delComment(commentId, commentChildId, articleID, channelId) {
+      delComment(commentId, commentChildId, articleID, channelId, userId) {
         this.$http({
           method: 'get',
           url: '/authPermission',
@@ -173,7 +174,7 @@
           }
         }).then((data) => {
           if (data.data.isAuth == 'auth') {
-            this.delCommentFun(commentId, commentChildId, articleID, channelId);
+            this.delCommentFun(commentId, commentChildId, articleID, channelId, userId);
           } else {
             this.$notify({
               title: '警告',
@@ -186,7 +187,7 @@
           console.log(err)
         })
       },
-      delCommentFun(commentId, commentChildId, articleID, channelId) {
+      delCommentFun(commentId, commentChildId, articleID, channelId, userId) {
         this.$confirm('确认是否要删除该用户', '删除用户', {
           distinguishCancelAndClose: true,
           confirmButtonText: '确认',
@@ -199,12 +200,17 @@
               commentId: commentId,
               commentChildId: commentChildId,
               articleID: articleID,
-              channelId: channelId
+              channelId: channelId,
+              userId: userId
             }
-          }).then((data) => {
-            console.log(data)
+          }).then(data => {
+            if (data.data.msg == 1) {
+              this.$message({title: '成功', message: data.data.des, type: 'success'});
+            } else {
+              this.$message({title: '警告', message: data.data.des, type: 'warning'});
+            }
           }).catch((err) => {
-            this.$message({title: '失败', message: '删除随笔失败，请联系管理员！', type: 'error'});
+            this.$message({title: '失败', message: '删除评论失败，请联系管理员！', type: 'error'});
             console.log(err)
           })
         }).catch(action => {
