@@ -2,6 +2,14 @@
   <gemini-scrollbar class="my-scroll-bar">
     <bread-crumb></bread-crumb>
     <div class="find_admin">
+      <el-select v-model="channelId" placeholder="请选择" size="small" @change="selectChannelType()">
+        <el-option
+          v-for="item in channelType"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id">
+        </el-option>
+      </el-select>
       <el-date-picker
         style="margin-left: 20px;"
         v-model="dataRange"
@@ -15,55 +23,31 @@
         size="small"
         :picker-options="pickerOptions2">
       </el-date-picker>
-      <el-autocomplete
-        style="margin-left: 30px;"
-        popper-class="my-autocomplete"
-        v-model="title"
-        :fetch-suggestions="querySearchAsync"
-        @select="handleSelectName"
-        size="small"
-        placeholder="文章标题">
-        <i
-          class="el-icon-edit el-input__icon"
-          slot="suffix">
-        </i>
-        <template slot-scope="{ item }">
-          <span class="name">{{ item.title }}</span>
-        </template>
-      </el-autocomplete>
       <el-button type="primary" icon="el-icon-search" size="small" @click="commentData()">搜索</el-button>
     </div>
     <div class="admin_list">
       <template v-if="tableData.length>0">
         <el-table :data="tableData" stripe style="width: 100%" @selection-change="selectionChange" stripe
                   v-loading="loading"
-                  :row-key='tableData.id' fit highlight-current-row>
+                  :row-key='tableData._id' fit highlight-current-row>
           <el-table-column type="selection" width="55" align="center"></el-table-column>
           <el-table-column prop="createTime" label="评论时间" :show-overflow-tooltip="showText">
             <template slot-scope="scope">
               <i class="el-icon-time"></i>
-              <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
+              <span style="margin-left: 10px">{{ scope.row.replyData.createTime }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="title" label="评论者"></el-table-column>
-          <el-table-column prop="category" label="评论对象"></el-table-column>
-          <el-table-column prop="age" label="评论内容">
-            <template slot-scope="scope">
-              <div>
-                <span v-for="item of scope.row.tag">{{item}}&nbsp;&nbsp;</span>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="description" label="评论类别" :show-overflow-tooltip="showText"></el-table-column>
-          <el-table-column prop="content" label="类别标题" :show-overflow-tooltip="showText">
-            <template slot-scope="scope">
-              <div>请编辑查看</div>
-            </template>
-          </el-table-column>
+          <el-table-column prop="replyData.to.name" label="评论者"></el-table-column>
+          <el-table-column prop="replyData.from.name" label="评论对象"></el-table-column>
+          <el-table-column prop="replyData.content" label="评论内容" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column prop="status" label="评论类别" :show-overflow-tooltip="showText"></el-table-column>
+          <el-table-column prop="notesData.title" label="类别标题" :show-overflow-tooltip="showText"></el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="linkToEdit(scope.row._id)">编辑</el-button>
-              <el-button type="text" size="small" @click="delNotes(scope.row._id,scope.row.author._id)">移除</el-button>
+              <el-button type="text" size="small" @click="linkToEdit()">编辑</el-button>
+              <el-button type="text" size="small"
+                         @click="delComment(scope.row._id,scope.row.replyData._id,scope.row.notesData._id,channelId)">移除
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -132,48 +116,31 @@
             }
           }]
         },
-        dataRange: ''
+        dataRange: [],
+        channelId: 0,
+        channelType: [{id: 0, name: '随笔'}, {id: 1, name: '作品集'}, {id: 2, name: '相册'}, {id: 3, name: '音乐'}, {
+          id: 4,
+          name: '关于'
+        }, {id: 5, name: '留言'}]
       }
     },
     components: {
       BreadCrumb
     },
     mounted() {
-      this.getNotesInterface();
+      this.commentData();
     },
     methods: {
-      getNotesInterface() {
-        this.$http({
-          method: 'get',
-          url: '/allNotes',
-          params: {
-            title: this.title,
-            currentPage: this.currentPage,
-            showCount: this.showCount,
-            dataRange: this.dataRange
-          }
-        }).then(res => {
-          this.getAdminData(res);
-        }).catch(err => {
-          this.$message({message: '获取随笔失败，请联系管理员！', type: 'error'});
-          console.log(err)
-        });
-      },
-      getAdminData(data) {
-        let resData = data.data.Datas;
-        this.totalCount = data.data.totalCount;
-        if (resData.length > 0) {
+      getCommentFun(data) {
+        let resData = data.data.Data;
+        this.totalCount = data.data.total;
+        if (resData) {
           for (var i = 0; i < resData.length; i++) {
-            let replyNum = 0;
-            if (resData[i].createTime) {
-              resData[i].createTime = moment(resData[i].createTime).format('YYYY-MM-DD HH:mm:ss');
+            resData[i].replyData.createTime = moment(resData[i].replyData.createTime).format('YYYY-MM-DD HH:mm:ss');
+            resData[i].status = this.channelType[resData[i].status].name;
+            if (!resData[i].replyData.from) {
+              resData[i].replyData.from = {name: '没有评论对象'};
             }
-            if (resData[i].replyData.length > 0) {
-              resData[i].replyData.forEach(function (item, index) {
-                replyNum += item.replyData.length;
-              })
-            }
-            resData[i].replyData = replyNum;
           }
           this.tableData = resData;
           this.loading = false;
@@ -183,56 +150,21 @@
           this.noData = '没有找到合适的资源';
         }
       },
-      querySearchAsync(queryString, cb) {
-        let restaurants = this.tableData;
-        let results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          cb(results);
-        }, 2000 * Math.random());
-      },
-      createStateFilter(queryString) {
-        return (state) => {
-          return (state.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      handleSelectName(item) {
-        this.title = item.title;
-      },
       linkToEdit(id) {
-        this.$http({
-          method: 'get',
-          url: '/authPermission',
-          params: {
-            name: this.cookie.getCookie('user')
-          }
-        }).then((data) => {
-          if (data.data.isAuth == 'auth') {
-            this.$router.push({name: 'EditNotes', params: {id: id}})
-          } else {
-            this.$notify({
-              title: '警告',
-              message: '权限不足，无法编辑随笔！',
-              type: 'warning'
-            });
-          }
-        }).catch((err) => {
-          this.$message({message: '获取权限异常，请联系管理员！', type: 'error'});
-          console.log(err)
-        })
+        alert('该功能暂未开放');
       },
       selectionChange(selection) {
         console.log(selection)
       },
       handleSizeChange(val) {
         this.showCount = val;
-        this.getNotesInterface();
+        this.commentData();
       },
       handleCurrentChange(val) {
         this.currentPage = val;
-        this.getNotesInterface();
+        this.commentData();
       },
-      delNotes(id, authorId) {
+      delComment(commentId, commentChildId, articleID, channelId) {
         this.$http({
           method: 'get',
           url: '/authPermission',
@@ -241,7 +173,7 @@
           }
         }).then((data) => {
           if (data.data.isAuth == 'auth') {
-            this.delNotesFun(id, authorId);
+            this.delCommentFun(commentId, commentChildId, articleID, channelId);
           } else {
             this.$notify({
               title: '警告',
@@ -254,7 +186,7 @@
           console.log(err)
         })
       },
-      delNotesFun(notesId, id) {
+      delCommentFun(commentId, commentChildId, articleID, channelId) {
         this.$confirm('确认是否要删除该用户', '删除用户', {
           distinguishCancelAndClose: true,
           confirmButtonText: '确认',
@@ -262,16 +194,15 @@
         }).then(() => {
           this.$http({
             method: 'delete',
-            url: '/delNotes',
+            url: '/deleteComment',
             data: {
-              id: id,
-              notesId: notesId
+              commentId: commentId,
+              commentChildId: commentChildId,
+              articleID: articleID,
+              channelId: channelId
             }
           }).then((data) => {
-            if (data.data.msg == '1') {
-              this.getNotesInterface();
-              this.$message({title: '成功', message: data.data.des, type: 'success'});
-            }
+            console.log(data)
           }).catch((err) => {
             this.$message({title: '失败', message: '删除随笔失败，请联系管理员！', type: 'error'});
             console.log(err)
@@ -286,16 +217,23 @@
       onPick(data) {
         this.dataRange = data;
       },
+      selectChannelType(val) {
+        this.commentData();
+      },
       commentData() {
         this.$http({
           method: 'get',
           url: '/getCommentData',
           params: {
-            dataTime: this.dataRange
+            channelId: this.channelId,
+            dataTime: this.dataRange,
+            currentPage: this.currentPage,
+            showCount: this.showCount
           },
-        }).then((data) => {
-          console.log(data)
-        }).catch((err) => {
+        }).then(data => {
+          this.getCommentFun(data);
+        }).catch(err => {
+          this.$message({title: '失败', message: '获取评论失败，请联系管理员！', type: 'error'});
           console.log(err)
         })
       }

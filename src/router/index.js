@@ -15,7 +15,6 @@ export default new Router({
     },
     {
       path: '/index',
-      name: 'Main',
       component: resove => require(['../components/Main'], resove),
       meta: {
         title: '落雨如画后台管理平台-首页'
