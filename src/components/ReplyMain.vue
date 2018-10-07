@@ -188,7 +188,7 @@
         })
       },
       delCommentFun(commentId, commentChildId, articleID, channelId, userId) {
-        this.$confirm('确认是否要删除该用户', '删除用户', {
+        this.$confirm('确认是否要删除该条评论', '删除评论', {
           distinguishCancelAndClose: true,
           confirmButtonText: '确认',
           cancelButtonText: '取消'
