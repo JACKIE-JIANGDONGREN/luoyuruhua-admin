@@ -206,6 +206,7 @@
           }).then(data => {
             if (data.data.msg == 1) {
               this.$message({title: '成功', message: data.data.des, type: 'success'});
+              this.commentData();
             } else {
               this.$message({title: '警告', message: data.data.des, type: 'warning'});
             }
