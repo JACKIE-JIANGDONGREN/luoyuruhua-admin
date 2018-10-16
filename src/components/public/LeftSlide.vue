@@ -88,6 +88,21 @@
             icon: 'el-icon-document'
           },
           {
+            menuName: '作品集管理',
+            icon: 'el-icon-edit',
+            path: '/showreel',
+            hasChild: true,
+            children: [
+              {
+                menuName: '作品集',
+                path: '/index/showreel'
+              },
+              {
+                menuName: '添加作品',
+                path: '/index/addShowreel'
+              }
+            ]
+          }, {
             menuName: '关于平台',
             path: '/index/about',
             hasChild: false,

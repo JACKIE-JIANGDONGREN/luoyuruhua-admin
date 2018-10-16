@@ -204,5 +204,56 @@ export default [
         path: '/index/comment'
       }
     ]
+  },
+  {
+    name: 'ShowReel',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/index'
+      },
+      {
+        title: '作品集管理',
+        path: ''
+      },
+      {
+        title: '作品集',
+        path: '/index/showreel'
+      }
+    ]
+  },
+  {
+    name: 'AddShowReel',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/index'
+      },
+      {
+        title: '作品集管理',
+        path: ''
+      },
+      {
+        title: '添加作品',
+        path: '/index/addShowreel'
+      }
+    ]
+  },
+  {
+    name: 'EditShowReel',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/index'
+      },
+      {
+        title: '作品集管理',
+        path: ''
+      },
+      {
+        title: '编辑作品',
+        path: '/index/editShowreel'
+      }
+    ]
   }
 ]

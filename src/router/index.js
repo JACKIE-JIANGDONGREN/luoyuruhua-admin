@@ -132,6 +132,30 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-评论管理'
           }
+        },
+        {
+          path: 'showreel',
+          name: 'ShowReel',
+          component: resove => require(['../components/ShowReel'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-作品集管理'
+          }
+        },
+        {
+          path: 'addShowreel',
+          name: 'AddShowReel',
+          component: resove => require(['../components/AddShowReel'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-添加作品'
+          }
+        },
+        {
+          path: 'editShowreel/:id',
+          name: 'EditShowReel',
+          component: resove => require(['../components/EditShowReel'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-编辑作品'
+          }
         }
       ]
     }
