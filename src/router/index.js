@@ -15,14 +15,14 @@ export default new Router({
       }
     },
     {
-      path: '/index',
+      path: '/',
       component: resove => require(['../components/Main'], resove),
       meta: {
         title: '落雨如画后台管理平台-首页'
       },
       children: [
         {
-          path: '/',
+          path: 'index',
           name: 'Index',
           component: resove => require(['../components/Index'], resove),
           meta: {

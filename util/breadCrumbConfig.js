@@ -4,7 +4,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       }
     ]
   },
@@ -13,7 +13,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '管理员管理',
@@ -21,7 +21,7 @@ export default [
       },
       {
         title: '管理员列表',
-        path: '/index/admin'
+        path: ''
       }
     ]
   },
@@ -30,7 +30,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '管理员管理',
@@ -38,7 +38,7 @@ export default [
       },
       {
         title: '添加管理员',
-        path: '/index/addAdmain'
+        path: ''
       }
     ]
   },
@@ -47,7 +47,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '用户管理',
@@ -55,7 +55,7 @@ export default [
       },
       {
         title: '用户列表',
-        path: '/index/userAdmin'
+        path: ''
       }
     ]
   },
@@ -64,7 +64,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '用户管理',
@@ -72,7 +72,7 @@ export default [
       },
       {
         title: '添加用户',
-        path: '/index/addUser'
+        path: ''
       }
     ]
   },
@@ -81,7 +81,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '随笔管理',
@@ -89,7 +89,7 @@ export default [
       },
       {
         title: '随笔列表',
-        path: '/index/notesMain'
+        path: ''
       }
     ]
   },
@@ -98,7 +98,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '随笔管理',
@@ -106,7 +106,7 @@ export default [
       },
       {
         title: '添加随笔',
-        path: '/index/addNotes'
+        path: ''
       }
     ]
   },
@@ -115,7 +115,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '随笔管理',
@@ -123,7 +123,7 @@ export default [
       },
       {
         title: '编辑随笔',
-        path: '/index/editNotes'
+        path: ''
       }
     ]
   },
@@ -132,7 +132,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '关于平台',
@@ -145,7 +145,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '管理员信息',
@@ -158,7 +158,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '资料编辑',
@@ -171,7 +171,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '修改密码',
@@ -184,7 +184,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '编辑用户',
@@ -197,11 +197,11 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '评论数据管理',
-        path: '/index/comment'
+        path: ''
       }
     ]
   },
@@ -210,7 +210,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '作品集管理',
@@ -218,7 +218,7 @@ export default [
       },
       {
         title: '作品集',
-        path: '/index/showreel'
+        path: ''
       }
     ]
   },
@@ -227,7 +227,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '作品集管理',
@@ -235,7 +235,7 @@ export default [
       },
       {
         title: '添加作品',
-        path: '/index/addShowreel'
+        path: ''
       }
     ]
   },
@@ -244,7 +244,7 @@ export default [
     breadcrumb: [
       {
         title: '首页',
-        path: '/index'
+        path: '/'
       },
       {
         title: '作品集管理',
@@ -252,7 +252,7 @@ export default [
       },
       {
         title: '编辑作品',
-        path: '/index/editShowreel'
+        path: ''
       }
     ]
   }

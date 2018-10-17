@@ -53,7 +53,7 @@
         </el-form-item>
         <el-form-item label="随笔内容"></el-form-item>
         <div class="editor-container">
-          <UE :defaultMsg=form.content :config=config ref="ue"></UE>
+          <UE :content="form.content" :config=config ref="ue"></UE>
         </div>
         <el-form-item align="left" class="notes_btm">
           <el-button type="primary" @click="submitForm('form')">确定</el-button>

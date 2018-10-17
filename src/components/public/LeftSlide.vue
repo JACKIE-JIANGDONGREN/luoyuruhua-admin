@@ -41,11 +41,11 @@
             children: [
               {
                 menuName: '管理员列表',
-                path: '/index/admin'
+                path: '/admin'
               },
               {
                 menuName: '添加管理员',
-                path: '/index/addAdmain'
+                path: '/addAdmain'
               }
             ]
           },
@@ -57,11 +57,11 @@
             children: [
               {
                 menuName: '用户列表',
-                path: '/index/userAdmin'
+                path: '/userAdmin'
               },
               {
                 menuName: '添加用户',
-                path: '/index/addUser'
+                path: '/addUser'
               }
             ]
           },
@@ -73,17 +73,17 @@
             children: [
               {
                 menuName: '随笔列表',
-                path: '/index/notesMain'
+                path: '/notesMain'
               },
               {
                 menuName: '添加随笔',
-                path: '/index/addNotes'
+                path: '/addNotes'
               }
             ]
           },
           {
             menuName: '评论管理',
-            path: '/index/comment',
+            path: '/comment',
             hasChild: false,
             icon: 'el-icon-document'
           },
@@ -95,16 +95,16 @@
             children: [
               {
                 menuName: '作品集',
-                path: '/index/showreel'
+                path: '/showreel'
               },
               {
                 menuName: '添加作品',
-                path: '/index/addShowreel'
+                path: '/addShowreel'
               }
             ]
           }, {
             menuName: '关于平台',
-            path: '/index/about',
+            path: '/about',
             hasChild: false,
             icon: 'el-icon-location-outline'
           }
