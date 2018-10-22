@@ -46,6 +46,13 @@
             </template>
           </el-table-column>
           <el-table-column prop="title" label="名称"></el-table-column>
+          <el-table-column prop="showreelUrl" label="链接">
+            <template slot-scope="scope">
+              <a v-if="scope.row.showreelUrl" :href="scope.row.showreelUrl"
+                 target="_blank">{{scope.row.showreelUrl}}</a>
+              <a v-else href="javascript:void(0);">NULL</a>
+            </template>
+          </el-table-column>
           <el-table-column prop="category" label="分类"></el-table-column>
           <el-table-column prop="age" label="技术栈">
             <template slot-scope="scope">

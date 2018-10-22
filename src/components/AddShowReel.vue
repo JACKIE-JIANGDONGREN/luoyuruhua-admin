@@ -6,6 +6,9 @@
         <el-form-item label="作品名称" prop="title" style="width: 500px;">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
+        <el-form-item label="作品链接" style="width: 500px;">
+          <el-input v-model="form.showreelUrl"></el-input>
+        </el-form-item>
         <el-form-item label="作品分类" prop="category">
           <el-select v-model="form.category" placeholder="请选择类别" @change="selectCategory($event)">
             <el-option label="H5" value="H5"></el-option>
@@ -81,7 +84,8 @@
           category: '',
           tecTag: [],
           thumbImg: require('../assets/public/noimg.gif'),
-          content: '请简单叙述您的作品 . . .'
+          content: '请简单叙述您的作品 . . .',
+          showreelUrl: ''
         },
         rules: {
           title: [
