@@ -156,6 +156,30 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-编辑作品'
           }
+        },
+        {
+          path: 'album',
+          name: 'Album',
+          component: resove => require(['../components/Album'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-照片墙'
+          }
+        },
+        {
+          path: 'uploadPicture',
+          name: 'UploadPicture',
+          component: resove => require(['../components/UploadPicture'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-上传照片'
+          }
+        },
+        {
+          path: 'addImgKind',
+          name: 'AddImgKind',
+          component: resove => require(['../components/AddImgKind'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-添加照片类别'
+          }
         }
       ]
     }

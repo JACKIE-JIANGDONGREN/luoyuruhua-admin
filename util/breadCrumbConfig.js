@@ -255,5 +255,43 @@ export default [
         path: ''
       }
     ]
+  },
+  {
+    name: 'Album',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/'
+      },
+      {
+        title: '相册集',
+        path: ''
+      }
+    ]
+  },
+  {
+    name: 'UploadPicture',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/'
+      },
+      {
+        title: '上传照片',
+        path: ''
+      }
+    ]
+  }, {
+    name: 'AddImgKind',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/'
+      },
+      {
+        title: '添加分类',
+        path: ''
+      }
+    ]
   }
 ]

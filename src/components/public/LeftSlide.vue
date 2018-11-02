@@ -103,6 +103,24 @@
               }
             ]
           }, {
+            menuName: '相册管理',
+            icon: 'el-icon-edit',
+            path: '',
+            hasChild: true,
+            children: [
+              {
+                menuName: '相册集',
+                path: '/album'
+              },
+              {
+                menuName: '上传照片',
+                path: '/uploadPicture'
+              }, {
+                menuName: '添加分类',
+                path: '/addImgKind'
+              }
+            ]
+          }, {
             menuName: '关于平台',
             path: '/about',
             hasChild: false,
