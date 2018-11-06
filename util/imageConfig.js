@@ -8,8 +8,7 @@ export default {
       for (var i = 0; i < imgObj.length; i++) {
         var img = new Image();
         var obj = {};
-        // img.src = $(imgObj[i]).attr('src');
-        img.src = imgObj[i].getAttribute('src');
+        img.src = imgObj[i].url;
         if (img.width > winWidth) {
           img.height = winWidth / img.width * img.height;
           img.width = winWidth;
@@ -17,6 +16,7 @@ export default {
         obj.src = img.src;
         obj.w = img.width;
         obj.h = img.height;
+        obj.title = imgObj[i].name;
         imgBrowser.push(obj);
       }
     }

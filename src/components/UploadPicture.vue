@@ -20,13 +20,14 @@
           <input type="file" name="file" id="file" multiple="multiple"
                  accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
           <el-button size="small" type="primary" @click="insertImg()">点击上传</el-button>
-          <ul class="el-upload-list el-upload-list--text">
-            <li tabindex="0" class="el-upload-list__item is-success" v-for="(item,index) in this.ruleForm2.imgArr">
-              <!----><a
-              class="el-upload-list__item-name"><i
+          <ul class="el-upload-list el-upload-list--picture">
+            <li tabindex="0" class="el-upload-list__item is-success" v-for="(item,index) in this.ruleForm2.imgArr"><img
+              :src="item.url" @click="previewImgFun(index)"
+              alt="" class="el-upload-list__item-thumbnail"><a class="el-upload-list__item-name"
+                                                               @click="previewImgFun(index)"><i
               class="el-icon-document"></i>{{item.name}}
             </a><label class="el-upload-list__item-status-label"><i
-              class="el-icon-upload-success el-icon-circle-check"></i></label><i class="el-icon-close"
+              class="el-icon-upload-success el-icon-check"></i></label><i class="el-icon-close"
                                                                                  @click="delImg(item.url)"></i><i
               class="el-icon-close-tip" @click="delImg(item.url)">按 delete 键可删除</i><!----><!----></li>
           </ul>
@@ -38,11 +39,13 @@
           <el-button @click="resetForm('ruleForm2')" :disabled="permissions">重置</el-button>
         </el-form-item>
       </el-form>
+      <img-browser ref="childrens"></img-browser>
     </div>
   </GeminiScrollbar>
 </template>
 <script>
   import BreadCrumb from './public/BreadCrumb';
+  import ImgBrowser from './public/ImgBrowser';
 
   export default {
     name: "UploadPicture",
@@ -121,7 +124,6 @@
       insertImg() {
         let file = document.getElementById("file");
         let formData = new FormData();
-        console.log(file.files);
         for (var i in file.files) {
           if (parseInt((file.files[i].size)) / 1024 / 1024 > 5) {
             this.$notify({
@@ -144,11 +146,11 @@
             data: formData
           }).then(data => {
             this.ruleForm2.imgArr = data.data.imgArr;
+            this.$refs.childrens.resData(this.ruleForm2.imgArr);
             this.$message({
               message: '上传成功',
               type: 'success'
             });
-            console.log(data)
           }).catch(err => {
             console.log(err)
           });
@@ -156,11 +158,15 @@
       },
       delImg(index) {
         this.ruleForm2.imgArr.splice(index, 1);
+        this.$refs.childrens.resData(this.ruleForm2.imgArr);
         console.log(this.ruleForm2.imgArr)
+      },
+      previewImgFun(index) {
+        this.$refs.childrens.previewImg(index);
       }
     },
     components: {
-      BreadCrumb
+      BreadCrumb, ImgBrowser
     },
     mounted() {
       this.$http({

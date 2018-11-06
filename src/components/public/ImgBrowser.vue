@@ -61,31 +61,28 @@
         </div>
 
       </div>
-
     </div>
-
   </div>
 </template>
-
 <script>
   import 'public_css/photoswipe.css';
   import 'public_css/default-skin.css';
+  import ImageConfig from '../../../util/imageConfig';
 
   export default {
     name: "ImgBrowser",
     data() {
       return {
-        msg: 'ImgBrowser'
-      }
-    },
-    props: {
-      imgData: {
-        type: Array,
-        default: []
+        msg: 'ImgBrowser',
+        imgData: []
       }
     },
     methods: {
+      resData(data) {
+        this.imgData = data;
+    },
       previewImg(index) {
+        let _this = this;
         require([
           'public_js/photoswipe.min.js',
           'public_js/photoswipe-ui-default.min.js'
@@ -93,19 +90,7 @@
           var pswpElement = document.querySelectorAll('.pswp')[0];
 
           // build items array
-          var items = [
-            {
-              src: 'https://ss0.baidu.com/73t1bjeh1BF3odCf/it/u=1859250596,84760177&fm=85&s=AF81DB07DE8F5A4F373CA9D1030000B3',
-              w: 964,
-              h: 1024
-            },
-            {
-              src: 'https://ss0.baidu.com/73t1bjeh1BF3odCf/it/u=1859250596,84760177&fm=85&s=AF81DB07DE8F5A4F373CA9D1030000B3',
-              w: 1024,
-              h: 683
-            }
-          ];
-
+          var items = ImageConfig.isImages(_this.imgData);
           // define options (if needed)
           var options = {
             // history & focus options are disabled on CodePen
@@ -114,7 +99,6 @@
             index: index,
             showAnimationDuration: 0,
             hideAnimationDuration: 0
-
           };
 
           var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
@@ -122,9 +106,6 @@
 
         });
       }
-    },
-    mounted() {
-      console.log(this.imgData);
     }
   }
 </script>
