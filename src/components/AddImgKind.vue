@@ -168,7 +168,7 @@
               message: data.data.des,
               type: 'success'
             });
-            this.$router.push({name: 'UploadPicture'})
+            this.$router.push({name: 'Album'})
           }
         }).catch(err => {
           this.$notify.error({

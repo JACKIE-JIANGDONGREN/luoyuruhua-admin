@@ -270,6 +270,23 @@ export default [
     ]
   },
   {
+    name: 'AlbumWall',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/'
+      },
+      {
+        title: '相册集',
+        path: '/album'
+      },
+      {
+        title: '照片墙',
+        path: ''
+      }
+    ]
+  },
+  {
     name: 'UploadPicture',
     breadcrumb: [
       {

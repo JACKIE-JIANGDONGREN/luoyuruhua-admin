@@ -9,10 +9,10 @@
         <el-form-item label="上传到">
           <el-select v-model="ruleForm2.kind" placeholder="请选择" size="small" @change="selectChannelType()">
             <el-option
-              v-for="item in channelType"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
+              v-for="item in kindData"
+              :key="item._id"
+              :label="item.title"
+              :value="item._id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -28,8 +28,8 @@
               class="el-icon-document"></i>{{item.name}}
             </a><label class="el-upload-list__item-status-label"><i
               class="el-icon-upload-success el-icon-check"></i></label><i class="el-icon-close"
-                                                                                 @click="delImg(item.url)"></i><i
-              class="el-icon-close-tip" @click="delImg(item.url)">按 delete 键可删除</i><!----><!----></li>
+                                                                          @click="delImg(index,item.url)"></i><i
+              class="el-icon-close-tip" @click="delImg(index,item.url)">按 delete 键可删除</i><!----><!----></li>
           </ul>
         </el-form-item>
         <el-form-item>
@@ -60,13 +60,10 @@
       return {
         ruleForm2: {
           des: '',
-          kind: 0,
+          kind: '',
           imgArr: []
         },
-        channelType: [{id: 0, name: '随笔'}, {id: 1, name: '作品集'}, {id: 2, name: '相册'}, {id: 3, name: '音乐'}, {
-          id: 4,
-          name: '关于'
-        }, {id: 5, name: '留言'}],
+        kindData: [],
         rules2: {
           des: [
             {validator: validateDes, trigger: 'blur', required: true}
@@ -82,12 +79,17 @@
     methods: {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
-          if (valid) {
+          if (valid && this.ruleForm2.imgArr.length > 0 && this.ruleForm2.kind) {
             this.btnStatus = {info: true, text: '提交中'};
             this.$http({
               method: 'post',
-              url: '/addUser',
-              data: this.ruleForm2
+              url: '/addImgToAlbum',
+              data: {
+                title: this.ruleForm2.des,
+                photoList: this.ruleForm2.imgArr,
+                author: this.cookie.getCookie('user'),
+                kind: this.ruleForm2.kind
+              }
             }).then(res => {
               if (res.data.msg == '1') {
                 this.btnStatus = {info: false, text: '提交'};
@@ -97,15 +99,8 @@
                   type: 'success'
                 });
                 setTimeout(() => {
-                  this.$router.push({name: 'UserMain'});
+                  this.$router.push({name: 'Album'});
                 }, 1000);
-              } else {
-                this.btnStatus = {info: false, text: '提交'};
-                this.$notify({
-                  title: '警告',
-                  message: res.data.des,
-                  type: 'error'
-                });
               }
             }).catch(err => {
               this.$message({message: '请求异常，请联系管理员！', type: 'error'});
@@ -156,13 +151,43 @@
           });
         }
       },
-      delImg(index) {
+      delImg(index, url) {
+        let photoData = url.substring((url.lastIndexOf('/') + 1), url.length);
         this.ruleForm2.imgArr.splice(index, 1);
         this.$refs.childrens.resData(this.ruleForm2.imgArr);
-        console.log(this.ruleForm2.imgArr)
+        this.$http({
+          url: '/delPhoto',
+          method: 'delete',
+          data: {
+            imgData: [photoData]
+          }
+        }).then(data => {
+          if (data.data.msg == '1') {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            });
+          }
+        }).catch(err => {
+          console.log(err)
+        })
       },
       previewImgFun(index) {
         this.$refs.childrens.previewImg(index);
+      },
+      getKind() {
+        this.$http({
+          method: 'get',
+          url: '/photoAlbum',
+        }).then(res => {
+          this.kindData = res.data.Data;
+        }).catch(err => {
+          console.log(err)
+          alert(err);
+        })
+      },
+      selectChannelType() {
+
       }
     },
     components: {
@@ -188,6 +213,9 @@
         this.$message({message: '获取权限失败，请联系管理员！', type: 'error'});
         console.log(err)
       })
+    },
+    created() {
+      this.getKind();
     }
   }
 </script>

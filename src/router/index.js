@@ -162,6 +162,14 @@ export default new Router({
           name: 'Album',
           component: resove => require(['../components/Album'], resove),
           meta: {
+            title: '落雨如画后台管理平台-相册集'
+          }
+        },
+        {
+          path: 'albumWall/:id',
+          name: 'AlbumWall',
+          component: resove => require(['../components/AlbumWall'], resove),
+          meta: {
             title: '落雨如画后台管理平台-照片墙'
           }
         },
