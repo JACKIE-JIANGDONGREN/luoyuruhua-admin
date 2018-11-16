@@ -2,14 +2,6 @@
   <gemini-scrollbar class="my-scroll-bar">
     <bread-crumb></bread-crumb>
     <div class="filter_img">
-      <el-select v-model="channelId" placeholder="请选择" size="small" @change="selectChannelType()">
-        <el-option
-          v-for="item in channelType"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id">
-        </el-option>
-      </el-select>
       <el-date-picker
         style="margin-left: 20px;"
         v-model="dataRange"
@@ -30,6 +22,18 @@
         <img src="http://web.yswx.cn/upload/product/c/201809/19/201809191206546120.jpg" alt=""><br>
         <span>test</span>
       </a>
+    </div>
+    <div class="pagination">
+      <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[15, 25, 35, 50]"
+        :page-size="100"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalCount">
+      </el-pagination>
     </div>
     <img-browser ref="previewImg"></img-browser>
   </gemini-scrollbar>
@@ -70,12 +74,11 @@
             }
           }]
         },
-        dataRange: [],
-        channelId: 0,
-        channelType: [{id: 0, name: '随笔'}, {id: 1, name: '作品集'}, {id: 2, name: '相册'}, {id: 3, name: '音乐'}, {
-          id: 4,
-          name: '关于'
-        }, {id: 5, name: '留言'}]
+        dataRange: '',
+        noData: '',
+        currentPage: 1,
+        totalCount: 1,
+        showCount: 15,
       }
     },
     methods: {
@@ -88,13 +91,33 @@
       browserImg(index) {
         this.$refs.previewImg.previewImg(index);
         console.log(index);
+      },
+      handleSizeChange(val) {
+        this.showCount = val;
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val;
       }
     },
     components: {
       BreadCrumb, ImgBrowser
     },
     created() {
-
+      console.log(this.dataRange)
+      this.$http({
+        method: 'get',
+        url: '/findAlbumImg',
+        params: {
+          id: this.$route.params.id,
+          dataRange: this.dataRange,
+          showCount: this.showCount,
+          page: this.currentPage
+        }
+      }).then((data) => {
+        console.log(data)
+      }).catch((err) => {
+        console.log(err)
+      })
     }
   }
 </script>
@@ -123,16 +146,16 @@
     padding: 10px;
   }
 
+  .album_wall a:hover img {
+    transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+  }
+
   .album_wall a img {
     max-width: 200px;
     width: 100%;
     transition: all 0s linear .3s;
     -webkit-transition: all 0s linear .3s;
-  }
-
-  .album_wall a:hover img {
-    transform: scale(1.2);
-    -webkit-transform: scale(1.2);
   }
 
   .album_wall a span {
@@ -144,5 +167,10 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .pagination {
+    float: right;
+    padding: 50px 50px 40px;
   }
 </style>
