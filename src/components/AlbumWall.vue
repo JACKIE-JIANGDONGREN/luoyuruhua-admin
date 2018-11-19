@@ -15,13 +15,16 @@
         size="small"
         :picker-options="pickerOptions2">
       </el-date-picker>
-      <el-button type="primary" icon="el-icon-search" size="small" @click="commentData()">搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" size="small" @click="getImgData()">搜索</el-button>
     </div>
+    <template v-if="imgData.length>0">
     <div class="album_wall">
-      <a href="javascript:void(0);" v-for="item in 50" @click="browserImg(item)">
-        <img src="http://web.yswx.cn/upload/product/c/201809/19/201809191206546120.jpg" alt=""><br>
-        <span>test</span>
+        <div class="album_item" v-for="(item,index) in imgData" @click="browserImg(index)">
+          <a href="javascript:void(0);">
+            <img :src="item.imgMsg.url" alt=""><br>
       </a>
+          <span>{{item.imgMsg.name}}</span>
+        </div>
     </div>
     <div class="pagination">
       <el-pagination
@@ -35,6 +38,10 @@
         :total="totalCount">
       </el-pagination>
     </div>
+    </template>
+    <template v-else>
+      <p style="color: #f00;text-align: center;">没有数据</p>
+    </template>
     <img-browser ref="previewImg"></img-browser>
   </gemini-scrollbar>
 </template>
@@ -74,8 +81,8 @@
             }
           }]
         },
+        imgData: [],
         dataRange: '',
-        noData: '',
         currentPage: 1,
         totalCount: 1,
         showCount: 15,
@@ -85,25 +92,18 @@
       onPick(data) {
         this.dataRange = data;
       },
-      selectChannelType(val) {
-        console.log(this.channelId)
-      },
       browserImg(index) {
         this.$refs.previewImg.previewImg(index);
-        console.log(index);
       },
       handleSizeChange(val) {
         this.showCount = val;
+        this.getImgData();
       },
       handleCurrentChange(val) {
         this.currentPage = val;
-      }
+        this.getImgData();
     },
-    components: {
-      BreadCrumb, ImgBrowser
-    },
-    created() {
-      console.log(this.dataRange)
+      getImgData() {
       this.$http({
         method: 'get',
         url: '/findAlbumImg',
@@ -114,10 +114,24 @@
           page: this.currentPage
         }
       }).then((data) => {
-        console.log(data)
+          this.imgData = data.data.Datas;
+          let tempArr = [];
+          this.imgData.map(item => {
+            let obj = {};
+            obj = item.imgMsg;
+            tempArr.push(obj);
+          })
+          this.$refs.previewImg.resData(tempArr);
       }).catch((err) => {
         console.log(err)
       })
+    }
+    },
+    components: {
+      BreadCrumb, ImgBrowser
+    },
+    created() {
+      this.getImgData();
     }
   }
 </script>
@@ -135,30 +149,36 @@
     overflow: hidden;
   }
 
-  .album_wall a {
-    display: block;
-    float: left;
-    max-width: 200px;
-    overflow: hidden;
+  .album_wall .album_item {
+    padding: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
     box-shadow: 0 1px 8px rgba(46, 143, 237, 0.3);
-    padding: 10px;
+    overflow: hidden;
+    float: left;
   }
 
-  .album_wall a:hover img {
+  .album_wall a {
+    display: block;
+    width: 235px;
+    height: 175px;
+    overflow: hidden;
+  }
+
+  .album_wall .album_item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: all .4s linear 0s;
+    -webkit-transition: all .4s linear 0s;
+  }
+
+  .album_wall .album_item:hover img {
     transform: scale(1.2);
     -webkit-transform: scale(1.2);
   }
 
-  .album_wall a img {
-    max-width: 200px;
-    width: 100%;
-    transition: all 0s linear .3s;
-    -webkit-transition: all 0s linear .3s;
-  }
-
-  .album_wall a span {
+  .album_wall .album_item span {
     display: inline-block;
     margin-top: 5px;
     max-width: 200px;
