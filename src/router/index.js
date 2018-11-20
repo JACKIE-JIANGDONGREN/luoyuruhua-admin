@@ -188,6 +188,14 @@ export default new Router({
           meta: {
             title: '落雨如画后台管理平台-添加照片类别'
           }
+        },
+        {
+          path: 'editImgKind/:id',
+          name: 'EditImgKind',
+          component: resove => require(['../components/EditImgKind'], resove),
+          meta: {
+            title: '落雨如画后台管理平台-编辑相册集'
+          }
         }
       ]
     }

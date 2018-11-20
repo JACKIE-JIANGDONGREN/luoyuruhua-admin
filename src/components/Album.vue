@@ -13,6 +13,10 @@
             <li class="views">{{item.pageView}}</li>
             <li class="photo_num"><span>{{item.imgNum}}</span>张</li>
           </ul>
+          <el-button type="danger" icon="el-icon-delete" circle class="del_kind" @click="delKind(item._id)"
+                     title="删除"></el-button>
+          <el-button type="primary" icon="el-icon-edit" circle class="edit_kind" title="编辑"
+                     @click="editKind(item._id)"></el-button>
     </div>
       </template>
       <p style="color: #f00;text-align: center;padding: 30px 0;" v-else>没有相册集</p>
@@ -31,11 +35,40 @@
         loading: true
       }
     },
-    methods: {},
-    components: {
-      BreadCrumb
+    methods: {
+      delKind(id) {
+        this.$confirm('确认是否要删除该相册集', '除该相册集', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '确认',
+          cancelButtonText: '取消'
+        }).then(() => {
+          this.$http({
+            method: 'delete',
+            url: '/delImgKind',
+            data: {
+              id: id
+            }
+          }).then(res => {
+            if (res.data.msg == 1) {
+              this.photoData.forEach((item, index) => {
+                if (item._id == id) {
+                  this.photoData.splice(index, 1);
+                  this.$message({title: '成功', message: '删除成功', type: 'success'});
+                }
+              })
+            }
+          }).catch(err => {
+            console.log(err)
+            alert(err);
+          })
+        }).catch(action => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
+        });
     },
-    created() {
+      findKind() {
       this.$http({
         method: 'get',
         url: '/photoAlbum',
@@ -49,6 +82,16 @@
         console.log(err)
         alert(err);
       })
+      },
+      editKind(id) {
+        this.$router.push({name: 'EditImgKind', params: {id: id}})
+      }
+    },
+    components: {
+      BreadCrumb
+    },
+    created() {
+      this.findKind();
     }
   }
 </script>
@@ -60,6 +103,7 @@
   }
 
   .album_list .album_item {
+    position: relative;
     background: #fff;
     float: left;
     margin-right: 24px;
@@ -76,6 +120,10 @@
   .album_list .album_item:hover a img {
     transform: scale(1.2);
     -webkit-transform: scale(1.2);
+  }
+
+  .album_list .album_item:hover .del_kind, .album_list .album_item:hover .edit_kind {
+    display: block;
   }
 
   .album_list .album_item a {
@@ -145,6 +193,21 @@
     color: #759b08;
     text-decoration: underline;
     cursor: pointer;
+  }
+
+  .album_list .album_item .del_kind {
+    right: 5px;
+  }
+
+  .album_list .album_item .del_kind, .album_list .album_item .edit_kind {
+    position: absolute;
+    top: 5px;
+    z-index: 10;
+    display: none;
+  }
+
+  .album_list .album_item .edit_kind {
+    left: 5px;
   }
 
 </style>

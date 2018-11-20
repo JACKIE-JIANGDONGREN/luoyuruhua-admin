@@ -310,5 +310,21 @@ export default [
         path: ''
       }
     ]
+  }, {
+    name: 'EditImgKind',
+    breadcrumb: [
+      {
+        title: '首页',
+        path: '/'
+      },
+      {
+        title: '相册集',
+        path: '/album'
+      },
+      {
+        title: '编辑相册集',
+        path: ''
+      }
+    ]
   }
 ]
