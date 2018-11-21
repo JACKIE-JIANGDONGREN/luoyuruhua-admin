@@ -1,6 +1,11 @@
 <template>
   <gemini-scrollbar class="my-scroll-bar">
     <bread-crumb></bread-crumb>
+    <el-row class="operation_btn">
+      <el-button type="text" icon="el-icon-edit" @click="editImg()">{{editText}}</el-button>
+      <el-button type="text" icon="el-icon-delete" @click="delKindImg()">删除</el-button>
+      <el-button type="text" icon="el-icon-rank">移动</el-button>
+    </el-row>
     <div class="filter_img">
       <el-date-picker
         style="margin-left: 20px;"
@@ -19,10 +24,14 @@
     </div>
     <template v-if="imgData.length>0">
     <div class="album_wall">
-        <div class="album_item" v-for="(item,index) in imgData" @click="browserImg(index)">
-          <a href="javascript:void(0);">
+        <div class="album_item" v-for="(item,index) in imgData">
+          <a href="javascript:void(0);" @click="browserImg(index)">
             <img :src="item.imgMsg.url" alt=""><br>
       </a>
+          <template v-if="isShow">
+            <el-checkbox :checked="item.isSelect" class="edit_info"
+                         @change="modifiSel($event,item.imgMsg.url)"></el-checkbox>
+          </template>
           <span>{{item.imgMsg.name}}</span>
         </div>
     </div>
@@ -86,6 +95,8 @@
         currentPage: 1,
         totalCount: 1,
         showCount: 15,
+        isShow: false,
+        editText: '编辑'
       }
     },
     methods: {
@@ -117,6 +128,7 @@
           this.imgData = data.data.Datas;
           let tempArr = [];
           this.imgData.map(item => {
+            item.isSelect = false;
             let obj = {};
             obj = item.imgMsg;
             tempArr.push(obj);
@@ -125,6 +137,75 @@
       }).catch((err) => {
         console.log(err)
       })
+      },
+      modifiSel(val, urlInfo) {
+        this.imgData.forEach(item => {
+          if (urlInfo == item.imgMsg.url) {
+            item.isSelect = val;
+          }
+        })
+        console.log(this.imgData)
+      },
+      editImg() {
+        this.isShow ? this.isShow = false : this.isShow = true;
+        this.isShow ? this.editText = '取消编辑' : this.editText = '编辑';
+        this.imgData.forEach(item => {
+          if (item.isSelect) {
+            item.isSelect = false;
+          }
+        })
+      },
+      delKindImg() {
+        let reqData = [];
+        let infos = 0;
+        this.imgData.forEach(item => {
+          if (item.isSelect) {
+            reqData.push(item);
+            infos++;
+          }
+        });
+        if (infos == 0) {
+          this.$notify({
+            title: '警告',
+            message: '您还没选择任何图片',
+            type: 'warning'
+          });
+        } else {
+          this.$confirm('是否删除选中的图片?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.delKindImgFun(reqData)
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        }
+      },
+      delKindImgFun(Data) {
+        this.$http({
+          method: 'delete',
+          url: '/delKindImg',
+          data: {
+            id: this.$route.params.id,
+            delData: Data
+          }
+        }).then((data) => {
+          if (data.data.msg == 1) {
+            this.$message({
+              type: 'success',
+              message: data.data.des
+            });
+            this.getImgData();
+          } else {
+            this.$message.error(data.data.des);
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
     }
     },
     components: {
@@ -141,15 +222,12 @@
     padding: 20px 10px 0 20px;
   }
 
-  .filter_img {
-    padding: 20px 0 0 20px;
-  }
-
   .album_wall {
     overflow: hidden;
   }
 
   .album_wall .album_item {
+    position: relative;
     padding: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
@@ -163,6 +241,13 @@
     width: 235px;
     height: 175px;
     overflow: hidden;
+  }
+
+  .album_wall .album_item .edit_info {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 10;
   }
 
   .album_wall .album_item img {
@@ -192,5 +277,9 @@
   .pagination {
     float: right;
     padding: 50px 50px 40px;
+  }
+
+  .operation_btn {
+    padding-left: 20px;
   }
 </style>
